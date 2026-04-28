@@ -12,9 +12,7 @@ The FastAPI backend supports fully asynchronous operations, optimizing database 
 
 ✔ Versatile foundation – Designed for MVPs and production-ready applications, with a pre-configured authentication system and API layer.
 
-✔ Quick deployment – Deploys a full-stack application—including authentication flow and a dashboard—on Vercel in just a few steps.
-
-✔ Production-ready authentication – Includes a pre-configured authentication system and dashboard interface, allowing you to immediately start development with user management features.
+✔ Production-ready authentication – Pre-configured fastapi-users with HTTPOnly-cookie JWT auth, Google OAuth, password reset, and a shadcn/ui dashboard you can build on immediately.
 
 ## Technology stack
 This template features a carefully selected set of technologies to ensure efficiency, scalability, and ease of use:
@@ -29,7 +27,6 @@ This template features a carefully selected set of technologies to ensure effici
 - UV – Simplified dependency management and packaging.
 - Docker Compose – Consistent environments for development and production.
 - Pre-commit hooks – Automated code linting, formatting, and validation before commits.
-- Vercel Deployment – Serverless backend and scalable frontend, deployable with minimal configuration.
 - PostgreSQL with SQLAlchemy and Alembic – Robust database management and migrations.
 - Pytest and Playwright – Comprehensive testing for backend and end-to-end scenarios.
 - GitHub Actions – CI/CD pipelines for automated testing and deployment.

@@ -1,4 +1,4 @@
-from typing import Set
+from typing import Literal, Set
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -14,16 +14,14 @@ class Settings(BaseSettings):
 
     # User
     ACCESS_SECRET_KEY: str
-    REFRESH_SECRET_KEY: str
     RESET_PASSWORD_SECRET_KEY: str
     VERIFICATION_SECRET_KEY: str
-    CSRF_SECRET_KEY: str
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_SECONDS: int = 28800  # 8 hours
 
     # Cookie settings
     COOKIE_SECURE: bool = False  # Set to True in production
-    COOKIE_SAMESITE: str = "lax"  # lax or strict
+    COOKIE_SAMESITE: Literal["lax", "strict", "none"] = "lax"
 
     # Google OAuth
     GOOGLE_OAUTH_CLIENT_ID: str | None = None
@@ -56,4 +54,4 @@ class Settings(BaseSettings):
     )
 
 
-settings = Settings()
+settings = Settings()  # ty: ignore[missing-argument]  # populated from .env

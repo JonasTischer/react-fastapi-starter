@@ -1,5 +1,6 @@
-import uuid
+import logging
 import re
+import uuid
 
 from typing import Optional
 
@@ -27,6 +28,8 @@ from .schemas import UserCreate
 
 AUTH_URL_PATH = "auth"
 
+logger = logging.getLogger(__name__)
+
 # Google OAuth client
 google_oauth_client = GoogleOAuth2(
     settings.GOOGLE_OAUTH_CLIENT_ID or "",
@@ -40,7 +43,7 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
     verification_token_secret = settings.VERIFICATION_SECRET_KEY
 
     async def on_after_register(self, user: User, request: Optional[Request] = None):
-        print(f"User {user.id} has registered.")
+        logger.info("User %s has registered.", user.id)
 
     async def on_after_forgot_password(
         self, user: User, token: str, request: Optional[Request] = None
@@ -50,12 +53,13 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
     async def on_after_request_verify(
         self, user: User, token: str, request: Optional[Request] = None
     ):
-        print(f"Verification requested for user {user.id}. Verification token: {token}")
+        logger.info("Verification requested for user %s.", user.id)
+        logger.debug("Verification token for user %s: %s", user.id, token)
 
     async def validate_password(
         self,
         password: str,
-        user: UserCreate,
+        user: UserCreate | User,
     ) -> None:
         errors = []
 

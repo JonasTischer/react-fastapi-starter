@@ -71,6 +71,68 @@ export type HttpValidationError = {
 };
 
 /**
+ * ItemCreate
+ */
+export type ItemCreate = {
+    /**
+     * Name
+     */
+    name: string;
+    /**
+     * Description
+     */
+    description?: string | null;
+    /**
+     * Quantity
+     */
+    quantity?: number | null;
+};
+
+/**
+ * ItemRead
+ */
+export type ItemRead = {
+    /**
+     * Id
+     */
+    id: string;
+    /**
+     * Name
+     */
+    name: string;
+    /**
+     * Description
+     */
+    description: string | null;
+    /**
+     * Quantity
+     */
+    quantity: number | null;
+    /**
+     * User Id
+     */
+    user_id: string;
+};
+
+/**
+ * ItemUpdate
+ */
+export type ItemUpdate = {
+    /**
+     * Name
+     */
+    name?: string | null;
+    /**
+     * Description
+     */
+    description?: string | null;
+    /**
+     * Quantity
+     */
+    quantity?: number | null;
+};
+
+/**
  * OAuth2AuthorizeResponse
  */
 export type OAuth2AuthorizeResponse = {
@@ -174,6 +236,16 @@ export type ValidationError = {
      * Error Type
      */
     type: string;
+    /**
+     * Input
+     */
+    input?: unknown;
+    /**
+     * Context
+     */
+    ctx?: {
+        [key: string]: unknown;
+    };
 };
 
 /**
@@ -656,3 +728,106 @@ export type OauthGoogleOauthJwtCallbackResponses = {
      */
     200: unknown;
 };
+
+export type ListItemsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/items';
+};
+
+export type ListItemsResponses = {
+    /**
+     * Response Items-List Items
+     *
+     * Successful Response
+     */
+    200: Array<ItemRead>;
+};
+
+export type ListItemsResponse = ListItemsResponses[keyof ListItemsResponses];
+
+export type CreateItemData = {
+    body: ItemCreate;
+    path?: never;
+    query?: never;
+    url: '/items';
+};
+
+export type CreateItemErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type CreateItemError = CreateItemErrors[keyof CreateItemErrors];
+
+export type CreateItemResponses = {
+    /**
+     * Successful Response
+     */
+    201: ItemRead;
+};
+
+export type CreateItemResponse = CreateItemResponses[keyof CreateItemResponses];
+
+export type DeleteItemData = {
+    body?: never;
+    path: {
+        /**
+         * Item Id
+         */
+        item_id: string;
+    };
+    query?: never;
+    url: '/items/{item_id}';
+};
+
+export type DeleteItemErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type DeleteItemError = DeleteItemErrors[keyof DeleteItemErrors];
+
+export type DeleteItemResponses = {
+    /**
+     * Successful Response
+     */
+    204: void;
+};
+
+export type DeleteItemResponse = DeleteItemResponses[keyof DeleteItemResponses];
+
+export type UpdateItemData = {
+    body: ItemUpdate;
+    path: {
+        /**
+         * Item Id
+         */
+        item_id: string;
+    };
+    query?: never;
+    url: '/items/{item_id}';
+};
+
+export type UpdateItemErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type UpdateItemError = UpdateItemErrors[keyof UpdateItemErrors];
+
+export type UpdateItemResponses = {
+    /**
+     * Successful Response
+     */
+    200: ItemRead;
+};
+
+export type UpdateItemResponse = UpdateItemResponses[keyof UpdateItemResponses];

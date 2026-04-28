@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Spinner from "@/components/common/spinner";
 
@@ -10,7 +10,7 @@ import Spinner from "@/components/common/spinner";
  * After Google OAuth authentication, the backend redirects here with the token in a cookie.
  * We just need to redirect to the dashboard - the cookie is already set by the backend.
  */
-export default function AuthCallbackPage() {
+function AuthCallbackContent() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 
@@ -37,5 +37,19 @@ export default function AuthCallbackPage() {
 				</p>
 			</div>
 		</div>
+	);
+}
+
+export default function AuthCallbackPage() {
+	return (
+		<Suspense
+			fallback={
+				<div className="flex h-screen w-screen items-center justify-center">
+					<Spinner />
+				</div>
+			}
+		>
+			<AuthCallbackContent />
+		</Suspense>
 	);
 }

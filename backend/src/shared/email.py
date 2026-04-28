@@ -7,9 +7,20 @@ from src.auth.models import User
 
 
 def get_email_config():
-    conf = ConnectionConfig(
+    if (
+        settings.MAIL_USERNAME is None
+        or settings.MAIL_PASSWORD is None
+        or settings.MAIL_FROM is None
+        or settings.MAIL_PORT is None
+        or settings.MAIL_SERVER is None
+    ):
+        raise RuntimeError(
+            "Email is not configured. Set MAIL_USERNAME, MAIL_PASSWORD, MAIL_FROM, "
+            "MAIL_PORT, and MAIL_SERVER in the backend .env."
+        )
+    return ConnectionConfig(
         MAIL_USERNAME=settings.MAIL_USERNAME,
-        MAIL_PASSWORD=settings.MAIL_PASSWORD,
+        MAIL_PASSWORD=settings.MAIL_PASSWORD,  # ty: ignore[invalid-argument-type]  # str coerced to SecretStr
         MAIL_FROM=settings.MAIL_FROM,
         MAIL_PORT=settings.MAIL_PORT,
         MAIL_SERVER=settings.MAIL_SERVER,
@@ -20,7 +31,6 @@ def get_email_config():
         VALIDATE_CERTS=settings.VALIDATE_CERTS,
         TEMPLATE_FOLDER=Path(__file__).parent.parent / "core" / "email_templates",
     )
-    return conf
 
 
 async def send_reset_password_email(user: User, token: str):
@@ -32,7 +42,7 @@ async def send_reset_password_email(user: User, token: str):
     link = f"{base_url}{encoded_params}"
     message = MessageSchema(
         subject="Password recovery",
-        recipients=[email],
+        recipients=[email],  # ty: ignore[invalid-argument-type]  # fastapi-mail accepts str
         template_body={"username": email, "link": link},
         subtype=MessageType.html,
     )

@@ -35,6 +35,8 @@ export default function RootLayout({
 	return (
 		<html
 			lang="en"
+			suppressHydrationWarning
+			data-scroll-behavior="smooth"
 			className={clsx(
 				"h-full scroll-smooth bg-white antialiased",
 				inter.variable,

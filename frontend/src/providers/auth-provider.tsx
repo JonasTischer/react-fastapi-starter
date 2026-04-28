@@ -5,11 +5,7 @@ import { useUser } from "@/tanstack/features/auth/queries";
 import { redirect } from "next/navigation";
 import { UserProvider } from "./user-provider";
 
-export function AuthProvider({
-	children,
-}: {
-	children: React.ReactNode;
-}) {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const { data: user, isLoading, isError } = useUser();
 
 	if (isLoading) {
@@ -21,11 +17,6 @@ export function AuthProvider({
 	}
 
 	if (isError || !user) {
-		redirect("/login");
-	}
-
-	// Type guard to ensure user is UserRead
-	if (typeof user === "string" || typeof user === "boolean") {
 		redirect("/login");
 	}
 

@@ -3,9 +3,12 @@ services:
     build:
       context: backend
     environment:
-      - OPENAPI_OUTPUT_FILE=./shared-data/openapi.json
+      # Write OpenAPI schema directly into the frontend dir (mounted below),
+      # so the frontend's openapi-ts generator picks it up at the same path
+      # whether you run natively or via docker.
+      - OPENAPI_OUTPUT_FILE=/frontend/openapi.json
       - DATABASE_URL=postgresql+asyncpg://postgres:password@db:5432/mydatabase
-      - TEST_DATABASE_URL=postgresql+asyncpg://postgres:password@db:5433/testdatabase
+      - TEST_DATABASE_URL=postgresql+asyncpg://postgres:password@db_test:5432/testdatabase
       - MAIL_SERVER=mailhog
     ports:
       - "8000:8000"
@@ -14,7 +17,7 @@ services:
     volumes:
       - ./backend:/app
       - fastapi-venv:/app/.venv
-      - ./local-shared-data:/app/shared-data
+      - ./frontend:/frontend
     depends_on:
       - db
   db:
@@ -28,7 +31,7 @@ services:
     networks:
       - my_network
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - "${DB_VOLUME_NAME:-postgres_data}:/var/lib/postgresql/data"
   db_test:
     image: postgres:17
     environment:
@@ -39,7 +42,6 @@ services:
       - "5433:5432"
     networks:
       - my_network
-    restart: always
   frontend:
     build:
       context: ./frontend
@@ -51,11 +53,9 @@ services:
     environment:
       NODE_ENV: development
       API_BASE_URL: http://backend:8000
-      OPENAPI_OUTPUT_FILE: ./shared-data/openapi.json
     volumes:
       - ./frontend:/app
       - nextjs-node-modules:/app/node_modules
-      - ./local-shared-data:/app/shared-data
   mailhog:
     image: mailhog/mailhog
     ports:

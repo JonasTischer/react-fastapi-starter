@@ -5,11 +5,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AuthProvider } from "@/providers/auth-provider";
 
-function AuthenticatedLayout({
-	children,
-}: {
-	children: React.ReactNode;
-}) {
+function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<SidebarProvider
 			style={

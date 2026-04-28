@@ -3,8 +3,8 @@
 import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { authJwtLogin, authJwtLogout, oauthGoogleOauthJwtAuthorize, oauthGoogleOauthJwtCallback, type Options, registerRegister, resetForgotPassword, resetResetPassword, usersCurrentUser, usersDeleteUser, usersPatchCurrentUser, usersPatchUser, usersUser, verifyRequestToken, verifyVerify } from '../sdk.gen';
-import type { AuthJwtLoginData, AuthJwtLoginError, AuthJwtLoginResponse, AuthJwtLogoutData, AuthJwtLogoutResponse, OauthGoogleOauthJwtAuthorizeData, OauthGoogleOauthJwtCallbackData, RegisterRegisterData, RegisterRegisterError, RegisterRegisterResponse, ResetForgotPasswordData, ResetForgotPasswordError, ResetResetPasswordData, ResetResetPasswordError, UsersCurrentUserData, UsersDeleteUserData, UsersDeleteUserError, UsersDeleteUserResponse, UsersPatchCurrentUserData, UsersPatchCurrentUserError, UsersPatchCurrentUserResponse, UsersPatchUserData, UsersPatchUserError, UsersPatchUserResponse, UsersUserData, VerifyRequestTokenData, VerifyRequestTokenError, VerifyVerifyData, VerifyVerifyError, VerifyVerifyResponse } from '../types.gen';
+import { authJwtLogin, authJwtLogout, createItem, deleteItem, listItems, oauthGoogleOauthJwtAuthorize, oauthGoogleOauthJwtCallback, type Options, registerRegister, resetForgotPassword, resetResetPassword, updateItem, usersCurrentUser, usersDeleteUser, usersPatchCurrentUser, usersPatchUser, usersUser, verifyRequestToken, verifyVerify } from '../sdk.gen';
+import type { AuthJwtLoginData, AuthJwtLoginError, AuthJwtLoginResponse, AuthJwtLogoutData, AuthJwtLogoutResponse, CreateItemData, CreateItemError, CreateItemResponse, DeleteItemData, DeleteItemError, DeleteItemResponse, ListItemsData, ListItemsResponse, OauthGoogleOauthJwtAuthorizeData, OauthGoogleOauthJwtAuthorizeError, OauthGoogleOauthJwtAuthorizeResponse, OauthGoogleOauthJwtCallbackData, OauthGoogleOauthJwtCallbackError, RegisterRegisterData, RegisterRegisterError, RegisterRegisterResponse, ResetForgotPasswordData, ResetForgotPasswordError, ResetResetPasswordData, ResetResetPasswordError, UpdateItemData, UpdateItemError, UpdateItemResponse, UsersCurrentUserData, UsersCurrentUserResponse, UsersDeleteUserData, UsersDeleteUserError, UsersDeleteUserResponse, UsersPatchCurrentUserData, UsersPatchCurrentUserError, UsersPatchCurrentUserResponse, UsersPatchUserData, UsersPatchUserError, UsersPatchUserResponse, UsersUserData, UsersUserError, UsersUserResponse, VerifyRequestTokenData, VerifyRequestTokenError, VerifyVerifyData, VerifyVerifyError, VerifyVerifyResponse } from '../types.gen';
 
 /**
  * Auth:Jwt.Login
@@ -155,9 +155,7 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
     if (options?.query) {
         params.query = options.query;
     }
-    return [
-        params
-    ];
+    return [params];
 };
 
 export const usersCurrentUserQueryKey = (options?: Options<UsersCurrentUserData>) => createQueryKey('usersCurrentUser', options);
@@ -165,20 +163,18 @@ export const usersCurrentUserQueryKey = (options?: Options<UsersCurrentUserData>
 /**
  * Users:Current User
  */
-export const usersCurrentUserOptions = (options?: Options<UsersCurrentUserData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await usersCurrentUser({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: usersCurrentUserQueryKey(options)
-    });
-};
+export const usersCurrentUserOptions = (options?: Options<UsersCurrentUserData>) => queryOptions<UsersCurrentUserResponse, DefaultError, UsersCurrentUserResponse, ReturnType<typeof usersCurrentUserQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await usersCurrentUser({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: usersCurrentUserQueryKey(options)
+});
 
 /**
  * Users:Patch Current User
@@ -219,20 +215,18 @@ export const usersUserQueryKey = (options: Options<UsersUserData>) => createQuer
 /**
  * Users:User
  */
-export const usersUserOptions = (options: Options<UsersUserData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await usersUser({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: usersUserQueryKey(options)
-    });
-};
+export const usersUserOptions = (options: Options<UsersUserData>) => queryOptions<UsersUserResponse, UsersUserError, UsersUserResponse, ReturnType<typeof usersUserQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await usersUser({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: usersUserQueryKey(options)
+});
 
 /**
  * Users:Patch User
@@ -256,38 +250,104 @@ export const oauthGoogleOauthJwtAuthorizeQueryKey = (options?: Options<OauthGoog
 /**
  * Oauth:Google.Oauth-Jwt.Authorize
  */
-export const oauthGoogleOauthJwtAuthorizeOptions = (options?: Options<OauthGoogleOauthJwtAuthorizeData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await oauthGoogleOauthJwtAuthorize({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: oauthGoogleOauthJwtAuthorizeQueryKey(options)
-    });
-};
+export const oauthGoogleOauthJwtAuthorizeOptions = (options?: Options<OauthGoogleOauthJwtAuthorizeData>) => queryOptions<OauthGoogleOauthJwtAuthorizeResponse, OauthGoogleOauthJwtAuthorizeError, OauthGoogleOauthJwtAuthorizeResponse, ReturnType<typeof oauthGoogleOauthJwtAuthorizeQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await oauthGoogleOauthJwtAuthorize({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: oauthGoogleOauthJwtAuthorizeQueryKey(options)
+});
 
 export const oauthGoogleOauthJwtCallbackQueryKey = (options?: Options<OauthGoogleOauthJwtCallbackData>) => createQueryKey('oauthGoogleOauthJwtCallback', options);
 
 /**
  * Oauth:Google.Oauth-Jwt.Callback
+ *
  * The response varies based on the authentication backend used.
  */
-export const oauthGoogleOauthJwtCallbackOptions = (options?: Options<OauthGoogleOauthJwtCallbackData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await oauthGoogleOauthJwtCallback({
+export const oauthGoogleOauthJwtCallbackOptions = (options?: Options<OauthGoogleOauthJwtCallbackData>) => queryOptions<unknown, OauthGoogleOauthJwtCallbackError, unknown, ReturnType<typeof oauthGoogleOauthJwtCallbackQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await oauthGoogleOauthJwtCallback({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: oauthGoogleOauthJwtCallbackQueryKey(options)
+});
+
+export const listItemsQueryKey = (options?: Options<ListItemsData>) => createQueryKey('listItems', options);
+
+/**
+ * List Items
+ */
+export const listItemsOptions = (options?: Options<ListItemsData>) => queryOptions<ListItemsResponse, DefaultError, ListItemsResponse, ReturnType<typeof listItemsQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await listItems({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: listItemsQueryKey(options)
+});
+
+/**
+ * Create Item
+ */
+export const createItemMutation = (options?: Partial<Options<CreateItemData>>): UseMutationOptions<CreateItemResponse, CreateItemError, Options<CreateItemData>> => {
+    const mutationOptions: UseMutationOptions<CreateItemResponse, CreateItemError, Options<CreateItemData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await createItem({
                 ...options,
-                ...queryKey[0],
-                signal,
+                ...fnOptions,
                 throwOnError: true
             });
             return data;
-        },
-        queryKey: oauthGoogleOauthJwtCallbackQueryKey(options)
-    });
+        }
+    };
+    return mutationOptions;
+};
+
+/**
+ * Delete Item
+ */
+export const deleteItemMutation = (options?: Partial<Options<DeleteItemData>>): UseMutationOptions<DeleteItemResponse, DeleteItemError, Options<DeleteItemData>> => {
+    const mutationOptions: UseMutationOptions<DeleteItemResponse, DeleteItemError, Options<DeleteItemData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await deleteItem({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+/**
+ * Update Item
+ */
+export const updateItemMutation = (options?: Partial<Options<UpdateItemData>>): UseMutationOptions<UpdateItemResponse, UpdateItemError, Options<UpdateItemData>> => {
+    const mutationOptions: UseMutationOptions<UpdateItemResponse, UpdateItemError, Options<UpdateItemData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await updateItem({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
 };

@@ -16,6 +16,8 @@ from src.auth.service import get_jwt_strategy
 @pytest_asyncio.fixture(scope="function")
 async def engine():
     """Create a fresh test database engine for each test function."""
+    if settings.TEST_DATABASE_URL is None:
+        raise RuntimeError("TEST_DATABASE_URL must be set to run tests")
     engine = create_async_engine(settings.TEST_DATABASE_URL, echo=True)
 
     async with engine.begin() as conn:

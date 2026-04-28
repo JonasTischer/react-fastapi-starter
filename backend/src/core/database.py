@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 
 from .config import settings
 from src.auth.models import Base, User, OAuthAccount
+from src.items.models import Item  # noqa: F401 — register model with Base.metadata
 
 
 parsed_db_url = urlparse(settings.DATABASE_URL)

@@ -8,7 +8,7 @@ export default defineConfig({
 		"@hey-api/schemas",
 		{
 			name: "@hey-api/client-next",
-			runtimeConfigPath: "../../hey-api",
+			runtimeConfigPath: "@/hey-api",
 		},
 		"@tanstack/react-query",
 		"zod",

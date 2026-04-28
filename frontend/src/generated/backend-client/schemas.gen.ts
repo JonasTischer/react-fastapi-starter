@@ -9,7 +9,9 @@ export const Body_auth_reset_forgot_passwordSchema = {
         }
     },
     type: 'object',
-    required: ['email'],
+    required: [
+        'email'
+    ],
     title: 'Body_auth-reset:forgot_password'
 } as const;
 
@@ -25,7 +27,10 @@ export const Body_auth_reset_reset_passwordSchema = {
         }
     },
     type: 'object',
-    required: ['token', 'password'],
+    required: [
+        'token',
+        'password'
+    ],
     title: 'Body_auth-reset:reset_password'
 } as const;
 
@@ -38,7 +43,9 @@ export const Body_auth_verify_request_tokenSchema = {
         }
     },
     type: 'object',
-    required: ['email'],
+    required: [
+        'email'
+    ],
     title: 'Body_auth-verify:request-token'
 } as const;
 
@@ -50,7 +57,9 @@ export const Body_auth_verify_verifySchema = {
         }
     },
     type: 'object',
-    required: ['token'],
+    required: [
+        'token'
+    ],
     title: 'Body_auth-verify:verify'
 } as const;
 
@@ -72,7 +81,9 @@ export const ErrorModelSchema = {
         }
     },
     type: 'object',
-    required: ['detail'],
+    required: [
+        'detail'
+    ],
     title: 'ErrorModel'
 } as const;
 
@@ -80,7 +91,7 @@ export const HTTPValidationErrorSchema = {
     properties: {
         detail: {
             items: {
-                '$ref': '#/components/schemas/ValidationError'
+                $ref: '#/components/schemas/ValidationError'
             },
             type: 'array',
             title: 'Detail'
@@ -88,6 +99,138 @@ export const HTTPValidationErrorSchema = {
     },
     type: 'object',
     title: 'HTTPValidationError'
+} as const;
+
+export const ItemCreateSchema = {
+    properties: {
+        name: {
+            type: 'string',
+            maxLength: 200,
+            minLength: 1,
+            title: 'Name'
+        },
+        description: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Description'
+        },
+        quantity: {
+            anyOf: [
+                {
+                    type: 'integer',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Quantity'
+        }
+    },
+    type: 'object',
+    required: [
+        'name'
+    ],
+    title: 'ItemCreate'
+} as const;
+
+export const ItemReadSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        name: {
+            type: 'string',
+            title: 'Name'
+        },
+        description: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Description'
+        },
+        quantity: {
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Quantity'
+        },
+        user_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'User Id'
+        }
+    },
+    type: 'object',
+    required: [
+        'id',
+        'name',
+        'description',
+        'quantity',
+        'user_id'
+    ],
+    title: 'ItemRead'
+} as const;
+
+export const ItemUpdateSchema = {
+    properties: {
+        name: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 200,
+                    minLength: 1
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Name'
+        },
+        description: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Description'
+        },
+        quantity: {
+            anyOf: [
+                {
+                    type: 'integer',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Quantity'
+        }
+    },
+    type: 'object',
+    title: 'ItemUpdate'
 } as const;
 
 export const OAuth2AuthorizeResponseSchema = {
@@ -98,7 +241,9 @@ export const OAuth2AuthorizeResponseSchema = {
         }
     },
     type: 'object',
-    required: ['authorization_url'],
+    required: [
+        'authorization_url'
+    ],
     title: 'OAuth2AuthorizeResponse'
 } as const;
 
@@ -151,7 +296,10 @@ export const UserCreateSchema = {
         }
     },
     type: 'object',
-    required: ['email', 'password'],
+    required: [
+        'email',
+        'password'
+    ],
     title: 'UserCreate'
 } as const;
 
@@ -184,7 +332,10 @@ export const UserReadSchema = {
         }
     },
     type: 'object',
-    required: ['id', 'email'],
+    required: [
+        'id',
+        'email'
+    ],
     title: 'UserRead'
 } as const;
 
@@ -274,10 +425,21 @@ export const ValidationErrorSchema = {
         type: {
             type: 'string',
             title: 'Error Type'
+        },
+        input: {
+            title: 'Input'
+        },
+        ctx: {
+            type: 'object',
+            title: 'Context'
         }
     },
     type: 'object',
-    required: ['loc', 'msg', 'type'],
+    required: [
+        'loc',
+        'msg',
+        'type'
+    ],
     title: 'ValidationError'
 } as const;
 
@@ -334,6 +496,9 @@ export const loginSchema = {
         }
     },
     type: 'object',
-    required: ['username', 'password'],
+    required: [
+        'username',
+        'password'
+    ],
     title: 'Body_auth-auth:jwt.login'
 } as const;

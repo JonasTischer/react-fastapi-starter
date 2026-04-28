@@ -2,18 +2,13 @@
 
 import { ModalProvider } from "@/providers/modal-provider";
 import { QueryProvider } from "@/providers/query-provider";
-import dynamic from "next/dynamic";
+import { ThemeProvider } from "next-themes";
 import type { ReactNode } from "react";
-
-const NextThemesProvider = dynamic(
-	() => import("next-themes").then((mod) => mod.ThemeProvider),
-	{ ssr: false },
-);
 
 export function Providers({ children }: { children: ReactNode }) {
 	return (
 		<QueryProvider>
-			<NextThemesProvider
+			<ThemeProvider
 				attribute="class"
 				defaultTheme="system"
 				enableSystem
@@ -21,7 +16,7 @@ export function Providers({ children }: { children: ReactNode }) {
 			>
 				{children}
 				<ModalProvider />
-			</NextThemesProvider>
+			</ThemeProvider>
 		</QueryProvider>
 	);
 }

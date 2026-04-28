@@ -10,6 +10,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
 from src.auth.models import Base
+from src.items.models import Item  # noqa: F401 — register model for autogenerate
 from dotenv import load_dotenv
 
 load_dotenv()

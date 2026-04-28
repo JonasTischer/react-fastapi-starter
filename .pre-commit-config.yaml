@@ -33,9 +33,8 @@ repos:
       # Run the formatter.
       - id: ruff-format
 
-  # ty type checker (local hook until official pre-commit hook is released)
-  # See: https://github.com/astral-sh/ty/issues/269
-  # Note: Only fails on errors, not warnings (warnings are configured in pyproject.toml)
+  # ty type checker (local hook until astral ships an official pre-commit hook).
+  # Fails only on errors, not warnings.
   - repo: local
     hooks:
       - id: ty
@@ -46,6 +45,9 @@ repos:
         files: ^backend/
         pass_filenames: false
 
+  # Frontend lint/format/typecheck and OpenAPI client regeneration.
+  # Tests (backend pytest, frontend vitest) run in CI only — see
+  # .github/workflows/ci.yml — to keep commits fast during rapid iteration.
   - repo: local
     hooks:
       - id: frontend-lint
@@ -81,7 +83,7 @@ repos:
         entry: sh -c 'cd backend && uv run python -m commands.generate_openapi_schema'
         language: system
         # Only run OpenAPI schema generation if schemas.py, main.py or package version have changed:
-        files: (main\.py$|schemas\.py$|pyproject\.toml)
+        files: (main\.py$|schemas\.py$|router\.py$|pyproject\.toml)
         pass_filenames: false
       - id: generate-frontend-client
         name: generate frontend client
@@ -89,18 +91,4 @@ repos:
         language: system
         # Only run frontend client generation if frontend files have changed:
         files: openapi\.json$
-        pass_filenames: false
-      - id: backend-tests
-        name: run backend unit tests
-        entry: bash -c 'cd backend && uv run pytest -m "not integration"'
-        language: system
-        types: [file]
-        files: ^backend/.*\.py$
-        pass_filenames: false
-      - id: frontend-tests
-        name: run frontend unit tests
-        entry: bash -c 'cd frontend && pnpm test'
-        language: system
-        types: [file]
-        files: ^frontend/src/.*\.(ts|tsx|js|jsx)$
         pass_filenames: false

@@ -53,7 +53,7 @@ check-migrations: ## Check for multiple alembic heads (fails if more than one he
 start-frontend: ## Start the frontend server with pnpm and hot reload
     cd {{FRONTEND_DIR}} && ./start.sh
 
-typecheck: ## Run type checking for frontend and backend
+typecheck: ## Run type checking for frontend (tsc) and backend (ty)
     cd {{FRONTEND_DIR}} && pnpm run typecheck
     cd {{BACKEND_DIR}} && uv run ty check .
 
@@ -64,9 +64,51 @@ typecheck-backend: ## Run ty type checking (backend only)
     cd {{BACKEND_DIR}} && uv run ty check .
 
 # Development commands
-dev: ## Start both backend and frontend servers concurrently
-    @echo "Starting backend and frontend servers..."
-    cd {{FRONTEND_DIR}} && ./start.sh & cd {{BACKEND_DIR}} && ./start.sh
+dev: ## Start both backend and frontend servers concurrently (Ctrl+C stops both)
+    #!/usr/bin/env bash
+    set -euo pipefail
+    echo "Starting backend and frontend servers..."
+
+    terminate_tree() {
+        local pid="$1"
+        local signal="${2:-TERM}"
+        local child
+
+        while read -r child; do
+            [ -n "$child" ] && terminate_tree "$child" "$signal"
+        done < <(pgrep -P "$pid" 2>/dev/null || true)
+
+        kill "-$signal" "$pid" 2>/dev/null || true
+    }
+
+    wait_for_exit() {
+        local pid="$1"
+        for _ in $(seq 1 30); do
+            kill -0 "$pid" 2>/dev/null || return 0
+            sleep 0.1
+        done
+        return 1
+    }
+
+    cleanup() {
+        trap - INT TERM EXIT
+
+        terminate_tree "$BACKEND_PID" TERM
+        terminate_tree "$FRONTEND_PID" TERM
+
+        wait_for_exit "$BACKEND_PID" || terminate_tree "$BACKEND_PID" KILL
+        wait_for_exit "$FRONTEND_PID" || terminate_tree "$FRONTEND_PID" KILL
+
+        wait 2>/dev/null || true
+    }
+
+    (cd {{BACKEND_DIR}} && ./start.sh) &
+    BACKEND_PID=$!
+    (cd {{FRONTEND_DIR}} && ./start.sh) &
+    FRONTEND_PID=$!
+    trap cleanup EXIT
+    trap 'cleanup; exit 0' INT TERM
+    wait "$BACKEND_PID" "$FRONTEND_PID"
 
 dev-conductor: ## Start backend/frontend using Conductor env (workspace ports/db)
     ./scripts/conductor-run.sh
@@ -105,9 +147,9 @@ generate-client: ## Generate OpenAPI schema and regenerate frontend client
 docker-up-db BRANCH="": ## Start the database (optionally per-branch volume via BRANCH)
     #!/usr/bin/env bash
     set -euo pipefail
-    VOLUME_NAME="whispa_db"
+    VOLUME_NAME="app_db"
     if [ -n "{{BRANCH}}" ]; then
-        VOLUME_NAME="whispa_db_{{BRANCH}}"
+        VOLUME_NAME="app_db_{{BRANCH}}"
     fi
     echo "Starting db with volume: ${VOLUME_NAME}"
     DB_VOLUME_NAME="${VOLUME_NAME}" {{DOCKER_COMPOSE}} up -d db

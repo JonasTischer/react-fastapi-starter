@@ -44,6 +44,14 @@ jobs:
         working-directory: ./backend
         run: uv sync --all-extras --dev
 
+      - name: Type check (ty)
+        working-directory: ./backend
+        run: |
+          set -o pipefail
+          output=$(uv run ty check . 2>&1)
+          echo "$output"
+          if echo "$output" | grep -q "^error\["; then exit 1; fi
+
       - name: Run tests
         working-directory: ./backend
         run: uv run coverage run -m pytest
@@ -70,7 +78,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
 
       - name: Install Node dependencies
         working-directory: ./frontend
@@ -115,7 +123,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
 
       - name: Install Node dependencies
         working-directory: ./frontend

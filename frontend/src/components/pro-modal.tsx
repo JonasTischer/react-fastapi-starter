@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Crown, Sparkles, X } from "lucide-react";
+import { Check, Crown, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -38,7 +38,7 @@ interface ProModalProps {
 export function ProModal({ children }: ProModalProps) {
 	const [isOpen, setIsOpen] = useState(false);
 	const [loading, setLoading] = useState(false);
-	const [plans, setPlans] = useState<Plan[]>([]);
+	const [_plans, _setPlans] = useState<Plan[]>([]);
 
 	// Mock data for now - you'll replace this with actual API calls
 	const mockPlans: Plan[] = [
@@ -84,7 +84,7 @@ export function ProModal({ children }: ProModalProps) {
 		},
 	];
 
-	const handleUpgrade = async (planId: number) => {
+	const handleUpgrade = async (_planId: number) => {
 		setLoading(true);
 		try {
 			// Here you would make the API call to create a checkout session
@@ -97,7 +97,7 @@ export function ProModal({ children }: ProModalProps) {
 
 			// For now, just show a toast
 			toast.success("Upgrade feature coming soon!");
-		} catch (error) {
+		} catch (_error) {
 			toast.error("Failed to start upgrade process");
 		} finally {
 			setLoading(false);
@@ -115,7 +115,7 @@ export function ProModal({ children }: ProModalProps) {
 		}
 	};
 
-	const getPlanColor = (planName: string) => {
+	const _getPlanColor = (planName: string) => {
 		switch (planName) {
 			case "pro":
 				return "bg-gradient-to-r from-amber-500 to-orange-500";

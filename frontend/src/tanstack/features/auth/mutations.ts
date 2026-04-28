@@ -12,7 +12,7 @@ export function useLogin() {
 	const router = useRouter();
 	return useMutation({
 		...authJwtLoginMutation(),
-		onSuccess: (data) => {
+		onSuccess: (_data) => {
 			// No need to manually set token - backend sets HTTPOnly cookie automatically
 			router.push("/dashboard");
 			toast.success("Logged in successfully!");
@@ -43,7 +43,7 @@ export function useSignUp() {
 	return useMutation({
 		...registerRegisterMutation(),
 		onSuccess: (
-			data,
+			_data,
 			variables: { body: { email: string; password: string } },
 		) => {
 			toast.success("Account created successfully!");

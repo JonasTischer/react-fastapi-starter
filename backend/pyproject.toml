@@ -6,7 +6,7 @@ authors = [{ name = "Jonas Tischer", email = "jonas.tischer@gmail.com" }]
 requires-python = ">=3.12"
 readme = "README.md"
 dependencies = [
-    "fastapi[standard]>=0.117.1",
+    "fastapi[standard]>=0.135.3",
     "asyncpg>=0.30.0",
     "fastapi-users[sqlalchemy,oauth]>=14.0.1",
     "pydantic-settings>=2.11",
@@ -18,11 +18,11 @@ dependencies = [
 dev = [
     "pre-commit>=3.8.0",
     "ruff>=0.1.15",
+    "ty>=0.0.1a14",
     "watchdog>=5.0.3",
     "python-dotenv>=1.0.1",
     "pytest>=8.3.4",
     "pytest-mock>=3.14.0",
-    "mypy>=1.14.1",
     "alembic>=1.14.0",
     "pytest-asyncio>=0.24.0",
 ]

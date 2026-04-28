@@ -1,78 +1,57 @@
-import time
+"""Regenerate the OpenAPI schema whenever a backend route or schema changes.
+
+Pairs with frontend/watcher.js — the schema written by this watcher triggers
+the frontend client regeneration. End result: edit a Pydantic schema in the
+backend, see typed frontend changes a couple of seconds later, no commit
+required.
+"""
+
 import re
 import subprocess
-import os
-from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
+import time
 from threading import Timer
 
-# Updated regex to include main.py, schemas.py, and all .py files in app/routes
-WATCHER_REGEX_PATTERN = re.compile(r"(main\.py|schemas\.py|routes/.*\.py)$")
-APP_PATH = "app"
+from watchdog.events import FileSystemEvent, FileSystemEventHandler
+from watchdog.observers import Observer
+
+WATCH_ROOT = "src"
+TRIGGER_PATTERN = re.compile(r"(main\.py|router\.py|schemas\.py)$")
+DEBOUNCE_SECONDS = 1.0
 
 
-class MyHandler(FileSystemEventHandler):
-    def __init__(self):
-        super().__init__()
-        self.debounce_timer = None
-        self.last_modified = 0
+class SchemaRegenHandler(FileSystemEventHandler):
+    def __init__(self) -> None:
+        self._timer: Timer | None = None
 
-    def on_modified(self, event):
-        if not event.is_directory and WATCHER_REGEX_PATTERN.search(
-            os.path.relpath(event.src_path, APP_PATH)
-        ):
-            current_time = time.time()
-            if current_time - self.last_modified > 1:
-                self.last_modified = current_time
-                if self.debounce_timer:
-                    self.debounce_timer.cancel()
-                self.debounce_timer = Timer(1.0, self.execute_command, [event.src_path])
-                self.debounce_timer.start()
+    def on_modified(self, event: FileSystemEvent) -> None:
+        if event.is_directory:
+            return
+        src_path = (
+            event.src_path.decode()
+            if isinstance(event.src_path, bytes)
+            else event.src_path
+        )
+        if not TRIGGER_PATTERN.search(src_path):
+            return
+        if self._timer is not None:
+            self._timer.cancel()
+        self._timer = Timer(DEBOUNCE_SECONDS, self._regenerate, [src_path])
+        self._timer.start()
 
-    def execute_command(self, file_path):
-        print(f"File {file_path} has been modified and saved.")
-        self.run_mypy_checks()
-        self.run_openapi_schema_generation()
-
-    def run_mypy_checks(self):
-        """Run mypy type checks and print output."""
-        print("Running mypy type checks...")
+    @staticmethod
+    def _regenerate(src_path: str) -> None:
+        print(f"[watcher] {src_path} changed — regenerating OpenAPI schema")
         result = subprocess.run(
-            ["uv", "run", "mypy", "app"],
-            capture_output=True,
-            text=True,
+            ["uv", "run", "python", "-m", "commands.generate_openapi_schema"],
             check=False,
         )
-        print(result.stdout, result.stderr, sep="\n")
-        print(
-            "Type errors detected! We recommend checking the mypy output for "
-            "more information on the issues."
-            if result.returncode
-            else "No type errors detected."
-        )
-
-    def run_openapi_schema_generation(self):
-        """Run the OpenAPI schema generation command."""
-        print("Proceeding with OpenAPI schema generation...")
-        try:
-            subprocess.run(
-                [
-                    "uv",
-                    "run",
-                    "python",
-                    "-m",
-                    "commands.generate_openapi_schema",
-                ],
-                check=True,
-            )
-            print("OpenAPI schema generation completed successfully.")
-        except subprocess.CalledProcessError as e:
-            print(f"An error occurred while generating OpenAPI schema: {e}")
+        if result.returncode != 0:
+            print(f"[watcher] schema generation failed (exit {result.returncode})")
 
 
 if __name__ == "__main__":
     observer = Observer()
-    observer.schedule(MyHandler(), APP_PATH, recursive=True)
+    observer.schedule(SchemaRegenHandler(), WATCH_ROOT, recursive=True)
     observer.start()
     try:
         while True:

@@ -53,10 +53,7 @@ const defaultPathSerializer = ({ path, url: _url }: PathSerializer) => {
       }
 
       if (Array.isArray(value)) {
-        url = url.replace(
-          match,
-          serializeArrayParam({ explode, name, style, value }),
-        );
+        url = url.replace(match, serializeArrayParam({ explode, name, style, value }));
         continue;
       }
 
@@ -95,9 +92,8 @@ const defaultPathSerializer = ({ path, url: _url }: PathSerializer) => {
 };
 
 export const createQuerySerializer = <T = unknown>({
-  allowReserved,
-  array,
-  object,
+  parameters = {},
+  ...args
 }: QuerySerializerOptions = {}) => {
   const querySerializer = (queryParams: T) => {
     const search: string[] = [];
@@ -109,29 +105,31 @@ export const createQuerySerializer = <T = unknown>({
           continue;
         }
 
+        const options = parameters[name] || args;
+
         if (Array.isArray(value)) {
           const serializedArray = serializeArrayParam({
-            allowReserved,
+            allowReserved: options.allowReserved,
             explode: true,
             name,
             style: 'form',
             value,
-            ...array,
+            ...options.array,
           });
           if (serializedArray) search.push(serializedArray);
         } else if (typeof value === 'object') {
           const serializedObject = serializeObjectParam({
-            allowReserved,
+            allowReserved: options.allowReserved,
             explode: true,
             name,
             style: 'deepObject',
             value: value as Record<string, unknown>,
-            ...object,
+            ...options.object,
           });
           if (serializedObject) search.push(serializedObject);
         } else {
           const serializedPrimitive = serializePrimitiveParam({
-            allowReserved,
+            allowReserved: options.allowReserved,
             name,
             value: value as string,
           });
@@ -147,9 +145,7 @@ export const createQuerySerializer = <T = unknown>({
 /**
  * Infers parseAs value from provided Content-Type header.
  */
-export const getParseAs = (
-  contentType: string | null,
-): Exclude<Config['parseAs'], 'auto'> => {
+export const getParseAs = (contentType: string | null): Exclude<Config['parseAs'], 'auto'> => {
   if (!contentType) {
     // If no Content-Type header is provided, the best we can do is return the raw response body,
     // which is effectively the same as the 'stream' option.
@@ -162,10 +158,7 @@ export const getParseAs = (
     return;
   }
 
-  if (
-    cleanContent.startsWith('application/json') ||
-    cleanContent.endsWith('+json')
-  ) {
+  if (cleanContent.startsWith('application/json') || cleanContent.endsWith('+json')) {
     return 'json';
   }
 
@@ -174,9 +167,7 @@ export const getParseAs = (
   }
 
   if (
-    ['application/', 'audio/', 'image/', 'video/'].some((type) =>
-      cleanContent.startsWith(type),
-    )
+    ['application/', 'audio/', 'image/', 'video/'].some((type) => cleanContent.startsWith(type))
   ) {
     return 'blob';
   }
@@ -312,10 +303,7 @@ export const mergeHeaders = (
       continue;
     }
 
-    const iterator =
-      header instanceof Headers
-        ? headersEntries(header)
-        : Object.entries(header);
+    const iterator = header instanceof Headers ? headersEntries(header) : Object.entries(header);
 
     for (const [key, value] of iterator) {
       if (value === null) {
@@ -325,7 +313,7 @@ export const mergeHeaders = (
           mergedHeaders.append(key, v as string);
         }
       } else if (value !== undefined) {
-        // assume object headers are meant to be JSON stringified, i.e. their
+        // assume object headers are meant to be JSON stringified, i.e., their
         // content value in OpenAPI specification is 'application/json'
         mergedHeaders.set(
           key,
@@ -339,16 +327,14 @@ export const mergeHeaders = (
 
 type ErrInterceptor<Err, Res, Options> = (
   error: Err,
-  response: Res,
+  /** response may be undefined due to a network error where no response object is produced */
+  response: Res | undefined,
   options: Options,
 ) => Err | Promise<Err>;
 
 type ReqInterceptor<Options> = (options: Options) => void | Promise<void>;
 
-type ResInterceptor<Res, Options> = (
-  response: Res,
-  options: Options,
-) => Res | Promise<Res>;
+type ResInterceptor<Res, Options> = (response: Res, options: Options) => Res | Promise<Res>;
 
 class Interceptors<Interceptor> {
   fns: Array<Interceptor | null> = [];
@@ -376,10 +362,7 @@ class Interceptors<Interceptor> {
     return this.fns.indexOf(id);
   }
 
-  update(
-    id: number | Interceptor,
-    fn: Interceptor,
-  ): number | Interceptor | false {
+  update(id: number | Interceptor, fn: Interceptor): number | Interceptor | false {
     const index = this.getInterceptorIndex(id);
     if (this.fns[index]) {
       this.fns[index] = fn;
@@ -400,11 +383,7 @@ export interface Middleware<Res, Err, Options> {
   response: Interceptors<ResInterceptor<Res, Options>>;
 }
 
-export const createInterceptors = <Res, Err, Options>(): Middleware<
-  Res,
-  Err,
-  Options
-> => ({
+export const createInterceptors = <Res, Err, Options>(): Middleware<Res, Err, Options> => ({
   error: new Interceptors<ErrInterceptor<Err, Res, Options>>(),
   request: new Interceptors<ReqInterceptor<Options>>(),
   response: new Interceptors<ResInterceptor<Res, Options>>(),

@@ -5,7 +5,7 @@ repos:
     rev: v6.0.0
     hooks:
       - id: check-added-large-files
-        args: ["--maxkb=500"]
+        args: ["--maxkb=3000"]
         exclude: >
           (?x)^(
               package-lock\.json
@@ -17,9 +17,15 @@ repos:
       - id: debug-statements
       - id: detect-private-key
 
+  # Gitleaks - Secret scanning
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.0
+    hooks:
+      - id: gitleaks
+
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
-    rev: v0.13.2
+    rev: v0.14.4
     hooks:
       # Run the linter.
       - id: ruff
@@ -27,28 +33,48 @@ repos:
       # Run the formatter.
       - id: ruff-format
 
+  # ty type checker (local hook until official pre-commit hook is released)
+  # See: https://github.com/astral-sh/ty/issues/269
+  # Note: Only fails on errors, not warnings (warnings are configured in pyproject.toml)
+  - repo: local
+    hooks:
+      - id: ty
+        name: ty type check
+        entry: bash -c 'cd backend && output=$(uv run ty check . 2>&1); echo "$output"; if echo "$output" | grep -q "^error\["; then exit 1; fi'
+        language: system
+        types: [python]
+        files: ^backend/
+        pass_filenames: false
+
   - repo: local
     hooks:
       - id: frontend-lint
         name: run frontend lint
-        entry: sh -c 'cd frontend && pnpm run lint'
+        entry: bash -c 'cd frontend && pnpm biome lint --write ./src'
         language: system
         types: [ file ]
-        files: ^frontend/.*\.(js|jsx|ts|tsx)$
-        pass_filenames: true
-      - id: frontend format
+        files: ^frontend/src/.*\.(js|jsx|ts|tsx)$
+        pass_filenames: false
+      - id: frontend-format
         name: Run format on frontend files
-        entry: sh -c 'cd frontend && pnpm run format'
+        entry: bash -c 'cd frontend && pnpm biome format --write ./src'
         language: system
         types: [ file ]
-        files: ^frontend/.*\.(js|jsx|ts|tsx)$
-        pass_filenames: true
-      - id: frontend typecheck
+        files: ^frontend/src/.*\.(js|jsx|ts|tsx)$
+        pass_filenames: false
+      - id: frontend-typecheck
         name: run frontend typecheck
         entry: sh -c 'cd frontend && pnpm run typecheck'
         language: system
         types: [ file ]
-        files: ^frontend/.*\.(ts|tsx)$
+        files: ^frontend/src/.*\.(ts|tsx)$
+        pass_filenames: false
+      - id: check-migration-heads
+        name: check for multiple migration heads
+        entry: bash -c 'cd backend && HEAD_COUNT=$(uv run alembic heads | wc -l | tr -d " "); if [ "$HEAD_COUNT" -gt 1 ]; then echo "ERROR - Multiple alembic heads detected. Run - uv run alembic merge -m merge-migrations heads"; exit 1; fi'
+        language: system
+        # Run when migration files change
+        files: ^backend/alembic_migrations/versions/.*\.py$
         pass_filenames: false
       - id: generate-openapi-schema
         name: generate OpenAPI schema
@@ -63,4 +89,18 @@ repos:
         language: system
         # Only run frontend client generation if frontend files have changed:
         files: openapi\.json$
+        pass_filenames: false
+      - id: backend-tests
+        name: run backend unit tests
+        entry: bash -c 'cd backend && uv run pytest -m "not integration"'
+        language: system
+        types: [file]
+        files: ^backend/.*\.py$
+        pass_filenames: false
+      - id: frontend-tests
+        name: run frontend unit tests
+        entry: bash -c 'cd frontend && pnpm test'
+        language: system
+        types: [file]
+        files: ^frontend/src/.*\.(ts|tsx|js|jsx)$
         pass_filenames: false

@@ -1,6 +1,7 @@
 import { LoginForm } from "@/components/login-form";
 import Logo from "@/components/common/logo"; // Assuming you have a Logo component
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
 	title: "Login | NextJS FastAPI",
@@ -25,7 +26,9 @@ export default function LoginPage() {
 
 			{/* Login Form Container */}
 			<div className="w-full max-w-sm">
-				<LoginForm />
+				<Suspense fallback={null}>
+					<LoginForm />
+				</Suspense>
 			</div>
 		</main>
 	);

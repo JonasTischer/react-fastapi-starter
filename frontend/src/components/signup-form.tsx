@@ -23,6 +23,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { passwordContainsEmail, passwordSchema } from "@/lib/auth";
 import { useSignUp } from "@/tanstack/features/auth/mutations";
 import { CheckCircle } from "lucide-react";
 
@@ -31,9 +32,7 @@ const formSchema = z
 		email: z.string().email({
 			message: "Please enter a valid email address.",
 		}),
-		password: z.string().min(8, {
-			message: "Password must be at least 8 characters.",
-		}),
+		password: passwordSchema,
 		confirmPassword: z.string(),
 		terms: z.boolean().refine((val) => val === true, {
 			message: "You must agree to the Terms of Service and Privacy Policy.",
@@ -42,6 +41,10 @@ const formSchema = z
 	.refine((data) => data.password === data.confirmPassword, {
 		message: "Passwords don't match",
 		path: ["confirmPassword"],
+	})
+	.refine((data) => !passwordContainsEmail(data.password, data.email), {
+		message: "Password should not contain e-mail.",
+		path: ["password"],
 	});
 
 export function SignUpForm() {
@@ -90,7 +93,11 @@ export function SignUpForm() {
 				</div>
 
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+					<form
+						method="post"
+						onSubmit={form.handleSubmit(onSubmit)}
+						className="space-y-4"
+					>
 						<FormField
 							control={form.control}
 							name="email"

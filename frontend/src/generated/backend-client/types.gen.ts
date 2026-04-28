@@ -29,26 +29,6 @@ export type BodyAuthResetResetPassword = {
 };
 
 /**
- * Body_auth-verify:request-token
- */
-export type BodyAuthVerifyRequestToken = {
-    /**
-     * Email
-     */
-    email: string;
-};
-
-/**
- * Body_auth-verify:verify
- */
-export type BodyAuthVerifyVerify = {
-    /**
-     * Token
-     */
-    token: string;
-};
-
-/**
  * ErrorModel
  */
 export type ErrorModel = {
@@ -133,16 +113,6 @@ export type ItemUpdate = {
 };
 
 /**
- * OAuth2AuthorizeResponse
- */
-export type OAuth2AuthorizeResponse = {
-    /**
-     * Authorization Url
-     */
-    authorization_url: string;
-};
-
-/**
  * UserCreate
  */
 export type UserCreate = {
@@ -154,18 +124,6 @@ export type UserCreate = {
      * Password
      */
     password: string;
-    /**
-     * Is Active
-     */
-    is_active?: boolean | null;
-    /**
-     * Is Superuser
-     */
-    is_superuser?: boolean | null;
-    /**
-     * Is Verified
-     */
-    is_verified?: boolean | null;
 };
 
 /**
@@ -199,25 +157,13 @@ export type UserRead = {
  */
 export type UserUpdate = {
     /**
-     * Password
-     */
-    password?: string | null;
-    /**
      * Email
      */
     email?: string | null;
     /**
-     * Is Active
+     * Password
      */
-    is_active?: boolean | null;
-    /**
-     * Is Superuser
-     */
-    is_superuser?: boolean | null;
-    /**
-     * Is Verified
-     */
-    is_verified?: boolean | null;
+    password?: string | null;
 };
 
 /**
@@ -338,35 +284,6 @@ export type AuthJwtLogoutResponses = {
 
 export type AuthJwtLogoutResponse = AuthJwtLogoutResponses[keyof AuthJwtLogoutResponses];
 
-export type RegisterRegisterData = {
-    body: UserCreate;
-    path?: never;
-    query?: never;
-    url: '/auth/register';
-};
-
-export type RegisterRegisterErrors = {
-    /**
-     * Bad Request
-     */
-    400: ErrorModel;
-    /**
-     * Validation Error
-     */
-    422: HttpValidationError;
-};
-
-export type RegisterRegisterError = RegisterRegisterErrors[keyof RegisterRegisterErrors];
-
-export type RegisterRegisterResponses = {
-    /**
-     * Successful Response
-     */
-    201: UserRead;
-};
-
-export type RegisterRegisterResponse = RegisterRegisterResponses[keyof RegisterRegisterResponses];
-
 export type ResetForgotPasswordData = {
     body: BodyAuthResetForgotPassword;
     path?: never;
@@ -417,317 +334,71 @@ export type ResetResetPasswordResponses = {
     200: unknown;
 };
 
-export type VerifyRequestTokenData = {
-    body: BodyAuthVerifyRequestToken;
+export type RegisterRegisterData = {
+    body: UserCreate;
     path?: never;
     query?: never;
-    url: '/auth/request-verify-token';
+    url: '/auth/register';
 };
 
-export type VerifyRequestTokenErrors = {
+export type RegisterRegisterErrors = {
     /**
      * Validation Error
      */
     422: HttpValidationError;
 };
 
-export type VerifyRequestTokenError = VerifyRequestTokenErrors[keyof VerifyRequestTokenErrors];
+export type RegisterRegisterError = RegisterRegisterErrors[keyof RegisterRegisterErrors];
 
-export type VerifyRequestTokenResponses = {
+export type RegisterRegisterResponses = {
     /**
      * Successful Response
      */
-    202: unknown;
+    201: UserRead;
 };
 
-export type VerifyVerifyData = {
-    body: BodyAuthVerifyVerify;
-    path?: never;
-    query?: never;
-    url: '/auth/verify';
-};
+export type RegisterRegisterResponse = RegisterRegisterResponses[keyof RegisterRegisterResponses];
 
-export type VerifyVerifyErrors = {
-    /**
-     * Bad Request
-     */
-    400: ErrorModel;
-    /**
-     * Validation Error
-     */
-    422: HttpValidationError;
-};
-
-export type VerifyVerifyError = VerifyVerifyErrors[keyof VerifyVerifyErrors];
-
-export type VerifyVerifyResponses = {
-    /**
-     * Successful Response
-     */
-    200: UserRead;
-};
-
-export type VerifyVerifyResponse = VerifyVerifyResponses[keyof VerifyVerifyResponses];
-
-export type UsersCurrentUserData = {
+export type CurrentUserData = {
     body?: never;
     path?: never;
     query?: never;
     url: '/auth/users/me';
 };
 
-export type UsersCurrentUserErrors = {
-    /**
-     * Missing token or inactive user.
-     */
-    401: unknown;
-};
-
-export type UsersCurrentUserResponses = {
+export type CurrentUserResponses = {
     /**
      * Successful Response
      */
     200: UserRead;
 };
 
-export type UsersCurrentUserResponse = UsersCurrentUserResponses[keyof UsersCurrentUserResponses];
+export type CurrentUserResponse = CurrentUserResponses[keyof CurrentUserResponses];
 
-export type UsersPatchCurrentUserData = {
+export type UpdateCurrentUserData = {
     body: UserUpdate;
     path?: never;
     query?: never;
     url: '/auth/users/me';
 };
 
-export type UsersPatchCurrentUserErrors = {
-    /**
-     * Bad Request
-     */
-    400: ErrorModel;
-    /**
-     * Missing token or inactive user.
-     */
-    401: unknown;
+export type UpdateCurrentUserErrors = {
     /**
      * Validation Error
      */
     422: HttpValidationError;
 };
 
-export type UsersPatchCurrentUserError = UsersPatchCurrentUserErrors[keyof UsersPatchCurrentUserErrors];
+export type UpdateCurrentUserError = UpdateCurrentUserErrors[keyof UpdateCurrentUserErrors];
 
-export type UsersPatchCurrentUserResponses = {
+export type UpdateCurrentUserResponses = {
     /**
      * Successful Response
      */
     200: UserRead;
 };
 
-export type UsersPatchCurrentUserResponse = UsersPatchCurrentUserResponses[keyof UsersPatchCurrentUserResponses];
-
-export type UsersDeleteUserData = {
-    body?: never;
-    path: {
-        /**
-         * Id
-         */
-        id: string;
-    };
-    query?: never;
-    url: '/auth/users/{id}';
-};
-
-export type UsersDeleteUserErrors = {
-    /**
-     * Missing token or inactive user.
-     */
-    401: unknown;
-    /**
-     * Not a superuser.
-     */
-    403: unknown;
-    /**
-     * The user does not exist.
-     */
-    404: unknown;
-    /**
-     * Validation Error
-     */
-    422: HttpValidationError;
-};
-
-export type UsersDeleteUserError = UsersDeleteUserErrors[keyof UsersDeleteUserErrors];
-
-export type UsersDeleteUserResponses = {
-    /**
-     * Successful Response
-     */
-    204: void;
-};
-
-export type UsersDeleteUserResponse = UsersDeleteUserResponses[keyof UsersDeleteUserResponses];
-
-export type UsersUserData = {
-    body?: never;
-    path: {
-        /**
-         * Id
-         */
-        id: string;
-    };
-    query?: never;
-    url: '/auth/users/{id}';
-};
-
-export type UsersUserErrors = {
-    /**
-     * Missing token or inactive user.
-     */
-    401: unknown;
-    /**
-     * Not a superuser.
-     */
-    403: unknown;
-    /**
-     * The user does not exist.
-     */
-    404: unknown;
-    /**
-     * Validation Error
-     */
-    422: HttpValidationError;
-};
-
-export type UsersUserError = UsersUserErrors[keyof UsersUserErrors];
-
-export type UsersUserResponses = {
-    /**
-     * Successful Response
-     */
-    200: UserRead;
-};
-
-export type UsersUserResponse = UsersUserResponses[keyof UsersUserResponses];
-
-export type UsersPatchUserData = {
-    body: UserUpdate;
-    path: {
-        /**
-         * Id
-         */
-        id: string;
-    };
-    query?: never;
-    url: '/auth/users/{id}';
-};
-
-export type UsersPatchUserErrors = {
-    /**
-     * Bad Request
-     */
-    400: ErrorModel;
-    /**
-     * Missing token or inactive user.
-     */
-    401: unknown;
-    /**
-     * Not a superuser.
-     */
-    403: unknown;
-    /**
-     * The user does not exist.
-     */
-    404: unknown;
-    /**
-     * Validation Error
-     */
-    422: HttpValidationError;
-};
-
-export type UsersPatchUserError = UsersPatchUserErrors[keyof UsersPatchUserErrors];
-
-export type UsersPatchUserResponses = {
-    /**
-     * Successful Response
-     */
-    200: UserRead;
-};
-
-export type UsersPatchUserResponse = UsersPatchUserResponses[keyof UsersPatchUserResponses];
-
-export type OauthGoogleOauthJwtAuthorizeData = {
-    body?: never;
-    path?: never;
-    query?: {
-        /**
-         * Scopes
-         */
-        scopes?: Array<string>;
-    };
-    url: '/auth/google/authorize';
-};
-
-export type OauthGoogleOauthJwtAuthorizeErrors = {
-    /**
-     * Validation Error
-     */
-    422: HttpValidationError;
-};
-
-export type OauthGoogleOauthJwtAuthorizeError = OauthGoogleOauthJwtAuthorizeErrors[keyof OauthGoogleOauthJwtAuthorizeErrors];
-
-export type OauthGoogleOauthJwtAuthorizeResponses = {
-    /**
-     * Successful Response
-     */
-    200: OAuth2AuthorizeResponse;
-};
-
-export type OauthGoogleOauthJwtAuthorizeResponse = OauthGoogleOauthJwtAuthorizeResponses[keyof OauthGoogleOauthJwtAuthorizeResponses];
-
-export type OauthGoogleOauthJwtCallbackData = {
-    body?: never;
-    path?: never;
-    query?: {
-        /**
-         * Code
-         */
-        code?: string | null;
-        /**
-         * Code Verifier
-         */
-        code_verifier?: string | null;
-        /**
-         * State
-         */
-        state?: string | null;
-        /**
-         * Error
-         */
-        error?: string | null;
-    };
-    url: '/auth/google/callback';
-};
-
-export type OauthGoogleOauthJwtCallbackErrors = {
-    /**
-     * Bad Request
-     */
-    400: ErrorModel;
-    /**
-     * Validation Error
-     */
-    422: HttpValidationError;
-};
-
-export type OauthGoogleOauthJwtCallbackError = OauthGoogleOauthJwtCallbackErrors[keyof OauthGoogleOauthJwtCallbackErrors];
-
-export type OauthGoogleOauthJwtCallbackResponses = {
-    /**
-     * Successful Response
-     */
-    200: unknown;
-};
+export type UpdateCurrentUserResponse = UpdateCurrentUserResponses[keyof UpdateCurrentUserResponses];
 
 export type ListItemsData = {
     body?: never;

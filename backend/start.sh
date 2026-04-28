@@ -25,13 +25,13 @@ wait_for_exit() {
 
 if [ -f /.dockerenv ]; then
     echo "Running in Docker"
-    fastapi dev src/main.py --host 0.0.0.0 --port 8000 --reload &
+    uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload &
     SERVER_PID=$!
     python watcher.py &
     WATCHER_PID=$!
 else
     echo "Running locally with uv"
-    uv run fastapi dev src/main.py --host 0.0.0.0 --port 8000 --reload &
+    uv run uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload &
     SERVER_PID=$!
     uv run python watcher.py &
     WATCHER_PID=$!

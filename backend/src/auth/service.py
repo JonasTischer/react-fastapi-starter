@@ -30,11 +30,14 @@ AUTH_URL_PATH = "auth"
 
 logger = logging.getLogger(__name__)
 
-# Google OAuth client
-google_oauth_client = GoogleOAuth2(
-    settings.GOOGLE_OAUTH_CLIENT_ID or "",
-    settings.GOOGLE_OAUTH_CLIENT_SECRET or "",
-    scopes=["openid", "email", "profile"],  # Standard OpenID Connect scopes
+google_oauth_client = (
+    GoogleOAuth2(
+        settings.GOOGLE_OAUTH_CLIENT_ID or "",
+        settings.GOOGLE_OAUTH_CLIENT_SECRET or "",
+        scopes=["openid", "email", "profile"],
+    )
+    if settings.GOOGLE_OAUTH_ENABLED
+    else None
 )
 
 
@@ -54,7 +57,6 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
         self, user: User, token: str, request: Optional[Request] = None
     ):
         logger.info("Verification requested for user %s.", user.id)
-        logger.debug("Verification token for user %s: %s", user.id, token)
 
     async def validate_password(
         self,

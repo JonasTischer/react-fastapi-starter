@@ -18,20 +18,6 @@ export const zBodyAuthResetResetPassword = z.object({
 });
 
 /**
- * Body_auth-verify:request-token
- */
-export const zBodyAuthVerifyRequestToken = z.object({
-    email: z.email()
-});
-
-/**
- * Body_auth-verify:verify
- */
-export const zBodyAuthVerifyVerify = z.object({
-    token: z.string()
-});
-
-/**
  * ErrorModel
  */
 export const zErrorModel = z.object({
@@ -71,21 +57,11 @@ export const zItemUpdate = z.object({
 });
 
 /**
- * OAuth2AuthorizeResponse
- */
-export const zOAuth2AuthorizeResponse = z.object({
-    authorization_url: z.string()
-});
-
-/**
  * UserCreate
  */
 export const zUserCreate = z.object({
     email: z.email(),
-    password: z.string(),
-    is_active: z.boolean().nullish().default(true),
-    is_superuser: z.boolean().nullish().default(false),
-    is_verified: z.boolean().nullish().default(false)
+    password: z.string()
 });
 
 /**
@@ -103,11 +79,8 @@ export const zUserRead = z.object({
  * UserUpdate
  */
 export const zUserUpdate = z.object({
-    password: z.string().nullish(),
     email: z.email().nullish(),
-    is_active: z.boolean().nullish(),
-    is_superuser: z.boolean().nullish(),
-    is_verified: z.boolean().nullish()
+    password: z.string().nullish()
 });
 
 /**
@@ -152,6 +125,10 @@ export const zAuthJwtLogoutResponse = z.union([
     z.void()
 ]);
 
+export const zResetForgotPasswordBody = zBodyAuthResetForgotPassword;
+
+export const zResetResetPasswordBody = zBodyAuthResetResetPassword;
+
 export const zRegisterRegisterBody = zUserCreate;
 
 /**
@@ -159,75 +136,17 @@ export const zRegisterRegisterBody = zUserCreate;
  */
 export const zRegisterRegisterResponse = zUserRead;
 
-export const zResetForgotPasswordBody = zBodyAuthResetForgotPassword;
+/**
+ * Successful Response
+ */
+export const zCurrentUserResponse = zUserRead;
 
-export const zResetResetPasswordBody = zBodyAuthResetResetPassword;
-
-export const zVerifyRequestTokenBody = zBodyAuthVerifyRequestToken;
-
-export const zVerifyVerifyBody = zBodyAuthVerifyVerify;
+export const zUpdateCurrentUserBody = zUserUpdate;
 
 /**
  * Successful Response
  */
-export const zVerifyVerifyResponse = zUserRead;
-
-/**
- * Successful Response
- */
-export const zUsersCurrentUserResponse = zUserRead;
-
-export const zUsersPatchCurrentUserBody = zUserUpdate;
-
-/**
- * Successful Response
- */
-export const zUsersPatchCurrentUserResponse = zUserRead;
-
-export const zUsersDeleteUserPath = z.object({
-    id: z.string()
-});
-
-/**
- * Successful Response
- */
-export const zUsersDeleteUserResponse = z.void();
-
-export const zUsersUserPath = z.object({
-    id: z.string()
-});
-
-/**
- * Successful Response
- */
-export const zUsersUserResponse = zUserRead;
-
-export const zUsersPatchUserBody = zUserUpdate;
-
-export const zUsersPatchUserPath = z.object({
-    id: z.string()
-});
-
-/**
- * Successful Response
- */
-export const zUsersPatchUserResponse = zUserRead;
-
-export const zOauthGoogleOauthJwtAuthorizeQuery = z.object({
-    scopes: z.array(z.string()).optional()
-});
-
-/**
- * Successful Response
- */
-export const zOauthGoogleOauthJwtAuthorizeResponse = zOAuth2AuthorizeResponse;
-
-export const zOauthGoogleOauthJwtCallbackQuery = z.object({
-    code: z.string().nullish(),
-    code_verifier: z.string().nullish(),
-    state: z.string().nullish(),
-    error: z.string().nullish()
-});
+export const zUpdateCurrentUserResponse = zUserRead;
 
 /**
  * Response Items-List Items

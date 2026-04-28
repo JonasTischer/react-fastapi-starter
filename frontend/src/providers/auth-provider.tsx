@@ -17,7 +17,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	}
 
 	if (isError || !user) {
-		redirect("/login");
+		const currentPath =
+			typeof window === "undefined"
+				? "/dashboard"
+				: `${window.location.pathname}${window.location.search}`;
+		redirect(`/login?redirect=${encodeURIComponent(currentPath)}`);
 	}
 
 	return <UserProvider initialUser={user}>{children}</UserProvider>;

@@ -4,8 +4,8 @@ import * as z from 'zod';
 
 import { type Client, type Options as Options2, type TDataShape, urlSearchParamsBodySerializer } from './client';
 import { client } from './client.gen';
-import type { AuthJwtLoginData, AuthJwtLoginErrors, AuthJwtLoginResponses, AuthJwtLogoutData, AuthJwtLogoutErrors, AuthJwtLogoutResponses, CreateItemData, CreateItemErrors, CreateItemResponses, DeleteItemData, DeleteItemErrors, DeleteItemResponses, ListItemsData, ListItemsResponses, OauthGoogleOauthJwtAuthorizeData, OauthGoogleOauthJwtAuthorizeErrors, OauthGoogleOauthJwtAuthorizeResponses, OauthGoogleOauthJwtCallbackData, OauthGoogleOauthJwtCallbackErrors, OauthGoogleOauthJwtCallbackResponses, RegisterRegisterData, RegisterRegisterErrors, RegisterRegisterResponses, ResetForgotPasswordData, ResetForgotPasswordErrors, ResetForgotPasswordResponses, ResetResetPasswordData, ResetResetPasswordErrors, ResetResetPasswordResponses, UpdateItemData, UpdateItemErrors, UpdateItemResponses, UsersCurrentUserData, UsersCurrentUserErrors, UsersCurrentUserResponses, UsersDeleteUserData, UsersDeleteUserErrors, UsersDeleteUserResponses, UsersPatchCurrentUserData, UsersPatchCurrentUserErrors, UsersPatchCurrentUserResponses, UsersPatchUserData, UsersPatchUserErrors, UsersPatchUserResponses, UsersUserData, UsersUserErrors, UsersUserResponses, VerifyRequestTokenData, VerifyRequestTokenErrors, VerifyRequestTokenResponses, VerifyVerifyData, VerifyVerifyErrors, VerifyVerifyResponses } from './types.gen';
-import { zAuthJwtLoginBody, zAuthJwtLoginResponse, zAuthJwtLogoutResponse, zCreateItemBody, zCreateItemResponse, zDeleteItemPath, zDeleteItemResponse, zListItemsResponse, zOauthGoogleOauthJwtAuthorizeQuery, zOauthGoogleOauthJwtAuthorizeResponse, zOauthGoogleOauthJwtCallbackQuery, zRegisterRegisterBody, zRegisterRegisterResponse, zResetForgotPasswordBody, zResetResetPasswordBody, zUpdateItemBody, zUpdateItemPath, zUpdateItemResponse, zUsersCurrentUserResponse, zUsersDeleteUserPath, zUsersDeleteUserResponse, zUsersPatchCurrentUserBody, zUsersPatchCurrentUserResponse, zUsersPatchUserBody, zUsersPatchUserPath, zUsersPatchUserResponse, zUsersUserPath, zUsersUserResponse, zVerifyRequestTokenBody, zVerifyVerifyBody, zVerifyVerifyResponse } from './zod.gen';
+import type { AuthJwtLoginData, AuthJwtLoginErrors, AuthJwtLoginResponses, AuthJwtLogoutData, AuthJwtLogoutErrors, AuthJwtLogoutResponses, CreateItemData, CreateItemErrors, CreateItemResponses, CurrentUserData, CurrentUserResponses, DeleteItemData, DeleteItemErrors, DeleteItemResponses, ListItemsData, ListItemsResponses, RegisterRegisterData, RegisterRegisterErrors, RegisterRegisterResponses, ResetForgotPasswordData, ResetForgotPasswordErrors, ResetForgotPasswordResponses, ResetResetPasswordData, ResetResetPasswordErrors, ResetResetPasswordResponses, UpdateCurrentUserData, UpdateCurrentUserErrors, UpdateCurrentUserResponses, UpdateItemData, UpdateItemErrors, UpdateItemResponses } from './types.gen';
+import { zAuthJwtLoginBody, zAuthJwtLoginResponse, zAuthJwtLogoutResponse, zCreateItemBody, zCreateItemResponse, zCurrentUserResponse, zDeleteItemPath, zDeleteItemResponse, zListItemsResponse, zRegisterRegisterBody, zRegisterRegisterResponse, zResetForgotPasswordBody, zResetResetPasswordBody, zUpdateCurrentUserBody, zUpdateCurrentUserResponse, zUpdateItemBody, zUpdateItemPath, zUpdateItemResponse } from './zod.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -60,24 +60,6 @@ export const authJwtLogout = <ThrowOnError extends boolean = false>(options?: Op
 });
 
 /**
- * Register:Register
- */
-export const registerRegister = <ThrowOnError extends boolean = false>(options: Options<RegisterRegisterData, ThrowOnError>) => (options.client ?? client).post<RegisterRegisterResponses, RegisterRegisterErrors, ThrowOnError>({
-    requestValidator: async (data) => await z.object({
-        body: zRegisterRegisterBody,
-        path: z.never().optional(),
-        query: z.never().optional()
-    }).parseAsync(data),
-    responseValidator: async (data) => await zRegisterRegisterResponse.parseAsync(data),
-    url: '/auth/register',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
-
-/**
  * Reset:Forgot Password
  */
 export const resetForgotPassword = <ThrowOnError extends boolean = false>(options: Options<ResetForgotPasswordData, ThrowOnError>) => (options.client ?? client).post<ResetForgotPasswordResponses, ResetForgotPasswordErrors, ThrowOnError>({
@@ -112,15 +94,16 @@ export const resetResetPassword = <ThrowOnError extends boolean = false>(options
 });
 
 /**
- * Verify:Request-Token
+ * Register:Register
  */
-export const verifyRequestToken = <ThrowOnError extends boolean = false>(options: Options<VerifyRequestTokenData, ThrowOnError>) => (options.client ?? client).post<VerifyRequestTokenResponses, VerifyRequestTokenErrors, ThrowOnError>({
+export const registerRegister = <ThrowOnError extends boolean = false>(options: Options<RegisterRegisterData, ThrowOnError>) => (options.client ?? client).post<RegisterRegisterResponses, RegisterRegisterErrors, ThrowOnError>({
     requestValidator: async (data) => await z.object({
-        body: zVerifyRequestTokenBody,
+        body: zRegisterRegisterBody,
         path: z.never().optional(),
         query: z.never().optional()
     }).parseAsync(data),
-    url: '/auth/request-verify-token',
+    responseValidator: async (data) => await zRegisterRegisterResponse.parseAsync(data),
+    url: '/auth/register',
     ...options,
     headers: {
         'Content-Type': 'application/json',
@@ -129,33 +112,15 @@ export const verifyRequestToken = <ThrowOnError extends boolean = false>(options
 });
 
 /**
- * Verify:Verify
+ * Current User
  */
-export const verifyVerify = <ThrowOnError extends boolean = false>(options: Options<VerifyVerifyData, ThrowOnError>) => (options.client ?? client).post<VerifyVerifyResponses, VerifyVerifyErrors, ThrowOnError>({
-    requestValidator: async (data) => await z.object({
-        body: zVerifyVerifyBody,
-        path: z.never().optional(),
-        query: z.never().optional()
-    }).parseAsync(data),
-    responseValidator: async (data) => await zVerifyVerifyResponse.parseAsync(data),
-    url: '/auth/verify',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
-
-/**
- * Users:Current User
- */
-export const usersCurrentUser = <ThrowOnError extends boolean = false>(options?: Options<UsersCurrentUserData, ThrowOnError>) => (options?.client ?? client).get<UsersCurrentUserResponses, UsersCurrentUserErrors, ThrowOnError>({
+export const currentUser = <ThrowOnError extends boolean = false>(options?: Options<CurrentUserData, ThrowOnError>) => (options?.client ?? client).get<CurrentUserResponses, unknown, ThrowOnError>({
     requestValidator: async (data) => await z.object({
         body: z.never().optional(),
         path: z.never().optional(),
         query: z.never().optional()
     }).parseAsync(data),
-    responseValidator: async (data) => await zUsersCurrentUserResponse.parseAsync(data),
+    responseValidator: async (data) => await zCurrentUserResponse.parseAsync(data),
     security: [{
             in: 'cookie',
             name: 'access_token',
@@ -166,15 +131,15 @@ export const usersCurrentUser = <ThrowOnError extends boolean = false>(options?:
 });
 
 /**
- * Users:Patch Current User
+ * Update Current User
  */
-export const usersPatchCurrentUser = <ThrowOnError extends boolean = false>(options: Options<UsersPatchCurrentUserData, ThrowOnError>) => (options.client ?? client).patch<UsersPatchCurrentUserResponses, UsersPatchCurrentUserErrors, ThrowOnError>({
+export const updateCurrentUser = <ThrowOnError extends boolean = false>(options: Options<UpdateCurrentUserData, ThrowOnError>) => (options.client ?? client).patch<UpdateCurrentUserResponses, UpdateCurrentUserErrors, ThrowOnError>({
     requestValidator: async (data) => await z.object({
-        body: zUsersPatchCurrentUserBody,
+        body: zUpdateCurrentUserBody,
         path: z.never().optional(),
         query: z.never().optional()
     }).parseAsync(data),
-    responseValidator: async (data) => await zUsersPatchCurrentUserResponse.parseAsync(data),
+    responseValidator: async (data) => await zUpdateCurrentUserResponse.parseAsync(data),
     security: [{
             in: 'cookie',
             name: 'access_token',
@@ -186,96 +151,6 @@ export const usersPatchCurrentUser = <ThrowOnError extends boolean = false>(opti
         'Content-Type': 'application/json',
         ...options.headers
     }
-});
-
-/**
- * Users:Delete User
- */
-export const usersDeleteUser = <ThrowOnError extends boolean = false>(options: Options<UsersDeleteUserData, ThrowOnError>) => (options.client ?? client).delete<UsersDeleteUserResponses, UsersDeleteUserErrors, ThrowOnError>({
-    requestValidator: async (data) => await z.object({
-        body: z.never().optional(),
-        path: zUsersDeleteUserPath,
-        query: z.never().optional()
-    }).parseAsync(data),
-    responseValidator: async (data) => await zUsersDeleteUserResponse.parseAsync(data),
-    security: [{
-            in: 'cookie',
-            name: 'access_token',
-            type: 'apiKey'
-        }],
-    url: '/auth/users/{id}',
-    ...options
-});
-
-/**
- * Users:User
- */
-export const usersUser = <ThrowOnError extends boolean = false>(options: Options<UsersUserData, ThrowOnError>) => (options.client ?? client).get<UsersUserResponses, UsersUserErrors, ThrowOnError>({
-    requestValidator: async (data) => await z.object({
-        body: z.never().optional(),
-        path: zUsersUserPath,
-        query: z.never().optional()
-    }).parseAsync(data),
-    responseValidator: async (data) => await zUsersUserResponse.parseAsync(data),
-    security: [{
-            in: 'cookie',
-            name: 'access_token',
-            type: 'apiKey'
-        }],
-    url: '/auth/users/{id}',
-    ...options
-});
-
-/**
- * Users:Patch User
- */
-export const usersPatchUser = <ThrowOnError extends boolean = false>(options: Options<UsersPatchUserData, ThrowOnError>) => (options.client ?? client).patch<UsersPatchUserResponses, UsersPatchUserErrors, ThrowOnError>({
-    requestValidator: async (data) => await z.object({
-        body: zUsersPatchUserBody,
-        path: zUsersPatchUserPath,
-        query: z.never().optional()
-    }).parseAsync(data),
-    responseValidator: async (data) => await zUsersPatchUserResponse.parseAsync(data),
-    security: [{
-            in: 'cookie',
-            name: 'access_token',
-            type: 'apiKey'
-        }],
-    url: '/auth/users/{id}',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
-
-/**
- * Oauth:Google.Oauth-Jwt.Authorize
- */
-export const oauthGoogleOauthJwtAuthorize = <ThrowOnError extends boolean = false>(options?: Options<OauthGoogleOauthJwtAuthorizeData, ThrowOnError>) => (options?.client ?? client).get<OauthGoogleOauthJwtAuthorizeResponses, OauthGoogleOauthJwtAuthorizeErrors, ThrowOnError>({
-    requestValidator: async (data) => await z.object({
-        body: z.never().optional(),
-        path: z.never().optional(),
-        query: zOauthGoogleOauthJwtAuthorizeQuery.optional()
-    }).parseAsync(data),
-    responseValidator: async (data) => await zOauthGoogleOauthJwtAuthorizeResponse.parseAsync(data),
-    url: '/auth/google/authorize',
-    ...options
-});
-
-/**
- * Oauth:Google.Oauth-Jwt.Callback
- *
- * The response varies based on the authentication backend used.
- */
-export const oauthGoogleOauthJwtCallback = <ThrowOnError extends boolean = false>(options?: Options<OauthGoogleOauthJwtCallbackData, ThrowOnError>) => (options?.client ?? client).get<OauthGoogleOauthJwtCallbackResponses, OauthGoogleOauthJwtCallbackErrors, ThrowOnError>({
-    requestValidator: async (data) => await z.object({
-        body: z.never().optional(),
-        path: z.never().optional(),
-        query: zOauthGoogleOauthJwtCallbackQuery.optional()
-    }).parseAsync(data),
-    url: '/auth/google/callback',
-    ...options
 });
 
 /**

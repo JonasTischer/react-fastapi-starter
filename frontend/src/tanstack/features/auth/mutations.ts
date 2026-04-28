@@ -3,18 +3,19 @@ import {
 	authJwtLogoutMutation,
 	registerRegisterMutation,
 } from "@/generated/backend-client/@tanstack/react-query.gen";
+import { getSafeRedirectPath } from "@/lib/auth";
 import { handleApiError } from "@/utils/error-handler";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-export function useLogin() {
+export function useLogin(redirectTo?: string | null) {
 	const router = useRouter();
 	return useMutation({
 		...authJwtLoginMutation(),
 		onSuccess: (_data) => {
 			// No need to manually set token - backend sets HTTPOnly cookie automatically
-			router.push("/dashboard");
+			router.push(getSafeRedirectPath(redirectTo));
 			toast.success("Logged in successfully!");
 		},
 		onError: (error) => {

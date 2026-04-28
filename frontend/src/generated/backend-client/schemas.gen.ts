@@ -34,35 +34,6 @@ export const Body_auth_reset_reset_passwordSchema = {
     title: 'Body_auth-reset:reset_password'
 } as const;
 
-export const Body_auth_verify_request_tokenSchema = {
-    properties: {
-        email: {
-            type: 'string',
-            format: 'email',
-            title: 'Email'
-        }
-    },
-    type: 'object',
-    required: [
-        'email'
-    ],
-    title: 'Body_auth-verify:request-token'
-} as const;
-
-export const Body_auth_verify_verifySchema = {
-    properties: {
-        token: {
-            type: 'string',
-            title: 'Token'
-        }
-    },
-    type: 'object',
-    required: [
-        'token'
-    ],
-    title: 'Body_auth-verify:verify'
-} as const;
-
 export const ErrorModelSchema = {
     properties: {
         detail: {
@@ -233,20 +204,6 @@ export const ItemUpdateSchema = {
     title: 'ItemUpdate'
 } as const;
 
-export const OAuth2AuthorizeResponseSchema = {
-    properties: {
-        authorization_url: {
-            type: 'string',
-            title: 'Authorization Url'
-        }
-    },
-    type: 'object',
-    required: [
-        'authorization_url'
-    ],
-    title: 'OAuth2AuthorizeResponse'
-} as const;
-
 export const UserCreateSchema = {
     properties: {
         email: {
@@ -257,44 +214,9 @@ export const UserCreateSchema = {
         password: {
             type: 'string',
             title: 'Password'
-        },
-        is_active: {
-            anyOf: [
-                {
-                    type: 'boolean'
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Is Active',
-            default: true
-        },
-        is_superuser: {
-            anyOf: [
-                {
-                    type: 'boolean'
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Is Superuser',
-            default: false
-        },
-        is_verified: {
-            anyOf: [
-                {
-                    type: 'boolean'
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Is Verified',
-            default: false
         }
     },
+    additionalProperties: false,
     type: 'object',
     required: [
         'email',
@@ -341,17 +263,6 @@ export const UserReadSchema = {
 
 export const UserUpdateSchema = {
     properties: {
-        password: {
-            anyOf: [
-                {
-                    type: 'string'
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Password'
-        },
         email: {
             anyOf: [
                 {
@@ -364,40 +275,19 @@ export const UserUpdateSchema = {
             ],
             title: 'Email'
         },
-        is_active: {
+        password: {
             anyOf: [
                 {
-                    type: 'boolean'
+                    type: 'string'
                 },
                 {
                     type: 'null'
                 }
             ],
-            title: 'Is Active'
-        },
-        is_superuser: {
-            anyOf: [
-                {
-                    type: 'boolean'
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Is Superuser'
-        },
-        is_verified: {
-            anyOf: [
-                {
-                    type: 'boolean'
-                },
-                {
-                    type: 'null'
-                }
-            ],
-            title: 'Is Verified'
+            title: 'Password'
         }
     },
+    additionalProperties: false,
     type: 'object',
     title: 'UserUpdate'
 } as const;

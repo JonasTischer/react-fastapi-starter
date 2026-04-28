@@ -12,9 +12,10 @@ app = FastAPI(
     openapi_url=settings.OPENAPI_URL,
 )
 
-# CORS — credentials=True is required for HTTPOnly auth cookies to be
-# sent on cross-origin requests. SameSite=lax on the cookie itself
-# provides CSRF protection for state-changing requests.
+# CORS credentials are required for HTTP-only auth cookies to be sent on
+# cross-origin browser requests. SameSite=lax reduces CSRF exposure for this
+# starter's default localhost setup; stricter production deployments should add
+# explicit CSRF protection for unsafe cross-site methods.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=list(settings.CORS_ORIGINS),

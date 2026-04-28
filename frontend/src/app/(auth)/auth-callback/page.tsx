@@ -3,6 +3,7 @@
 import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Spinner from "@/components/common/spinner";
+import { getSafeRedirectPath } from "@/lib/auth";
 
 /**
  * OAuth callback handler
@@ -23,8 +24,11 @@ function AuthCallbackContent() {
 			router.push(`/login?error=${encodeURIComponent(error)}`);
 		} else {
 			// Success! Backend has already set the HTTPOnly cookie
-			// Redirect to dashboard
-			router.push("/dashboard");
+			const redirectTo = getSafeRedirectPath(
+				sessionStorage.getItem("postAuthRedirect"),
+			);
+			sessionStorage.removeItem("postAuthRedirect");
+			router.push(redirectTo);
 		}
 	}, [router, searchParams]);
 

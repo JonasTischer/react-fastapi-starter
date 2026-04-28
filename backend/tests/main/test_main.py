@@ -100,3 +100,42 @@ class TestPasswordValidation:
         assert response.status_code == status.HTTP_201_CREATED
         assert user is not None
         assert user.email == "user@1.com"
+        assert not user.is_superuser
+        assert not user.is_verified
+
+    @pytest.mark.asyncio(loop_scope="function")
+    async def test_register_rejects_privileged_fields(self, test_client, db_session):
+        """Public registration must not accept privilege or verification flags."""
+        response = await test_client.post(
+            "/auth/register",
+            json={
+                "email": "admin@example.com",
+                "password": "Sppecialchar1#",
+                "is_superuser": True,
+                "is_verified": True,
+            },
+        )
+
+        row = await db_session.execute(select(User))
+
+        assert response.status_code == status.HTTP_422_UNPROCESSABLE_CONTENT
+        assert row.scalars().first() is None
+
+    @pytest.mark.asyncio(loop_scope="function")
+    async def test_current_user_update_rejects_privileged_fields(
+        self, test_client, authenticated_user
+    ):
+        """Authenticated users must not be able to promote or verify themselves."""
+        creds = authenticated_user["user_data"]
+        login = await test_client.post(
+            "/auth/jwt/login",
+            data={"username": creds["email"], "password": creds["password"]},
+        )
+        assert login.status_code == status.HTTP_204_NO_CONTENT
+
+        response = await test_client.patch(
+            "/auth/users/me",
+            json={"is_superuser": True, "is_verified": True},
+        )
+
+        assert response.status_code == status.HTTP_422_UNPROCESSABLE_CONTENT

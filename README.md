@@ -92,7 +92,3 @@ The Playwright test suite lives under `frontend/e2e` and validates the authentic
 3. From `frontend`, run `pnpm test:e2e`.
 
 You can override the frontend URL Playwright uses by exporting `PLAYWRIGHT_BASE_URL` or the port via `PLAYWRIGHT_WEB_PORT`.
-
-
-
-*Disclaimer: This project is not affiliated with Vercel.*

@@ -1,6 +1,6 @@
 # Development image: runs the Vite dev server (with HMR) plus the OpenAPI
 # client watcher. For production builds see Dockerfile.prod (Nginx + static).
-FROM node:22-bookworm
+FROM node:26-bookworm
 
 WORKDIR /app
 

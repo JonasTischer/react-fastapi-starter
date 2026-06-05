@@ -1,8 +1,8 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-	name: "NextJS FastAPI",
-	description: "Your NextJS FastAPI Starter Kit",
+	name: "React FastAPI",
+	description: "Your React FastAPI Starter Kit",
 	mainNav: [
 		{
 			title: "Home",

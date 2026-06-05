@@ -27,7 +27,10 @@ export default defineConfig({
     env: {
       ...process.env,
       PORT: String(port),
+      // API_BASE_URL is consumed by the Node-side test helpers (e2e/utils);
+      // VITE_API_BASE_URL is what the browser app reads via import.meta.env.
       API_BASE_URL: apiBaseUrl,
+      VITE_API_BASE_URL: apiBaseUrl,
     },
   },
   projects: [

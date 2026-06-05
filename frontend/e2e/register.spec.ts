@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 import { createTestUser } from "./utils/auth";
 import { randomEmail, randomPassword } from "./utils/random";
 
-const REGISTER_HEADING = "FastAPI Next Account";
+const REGISTER_HEADING = "React FastAPI Account";
 
 test.use({ storageState: { cookies: [], origins: [] } });
 
@@ -30,7 +30,7 @@ test.describe("Registration page", () => {
     await page.getByLabel("Email").fill(email);
     await page.getByLabel("Create Password").fill(password);
     await page.getByLabel("Confirm Password").fill(password);
-    await page.getByLabel("I agree to the Terms of Service and the Data Privacy Policy of FastAPI Next.").check();
+    await page.getByLabel("I agree to the Terms of Service and the Data Privacy Policy of React FastAPI.").check();
     await page.getByRole("button", { name: "Create Account" }).click();
 
     // Wait for either navigation to dashboard (auto-login) or redirect to login
@@ -52,7 +52,7 @@ test.describe("Registration page", () => {
     await page.getByRole("button", { name: "Create Account" }).click();
 
     await expect(
-      page.getByText("Password must be at least 8 characters."),
+      page.getByText("Password should be at least 8 characters."),
     ).toBeVisible();
   });
 
@@ -62,7 +62,7 @@ test.describe("Registration page", () => {
     await page.getByLabel("Email").fill("invalid-email");
     await page.getByLabel("Create Password").fill(password);
     await page.getByLabel("Confirm Password").fill(password);
-    await page.getByLabel("I agree to the Terms of Service and the Data Privacy Policy of FastAPI Next.").check();
+    await page.getByLabel("I agree to the Terms of Service and the Data Privacy Policy of React FastAPI.").check();
     await page.getByRole("button", { name: "Create Account" }).click();
 
     await expect(page.getByLabel("Email")).toHaveJSProperty(
@@ -80,7 +80,7 @@ test.describe("Registration page", () => {
     await page.getByLabel("Email").fill(existingUser.email);
     await page.getByLabel("Create Password").fill(password);
     await page.getByLabel("Confirm Password").fill(password);
-    await page.getByLabel("I agree to the Terms of Service and the Data Privacy Policy of FastAPI Next.").check();
+    await page.getByLabel("I agree to the Terms of Service and the Data Privacy Policy of React FastAPI.").check();
     await page.getByRole("button", { name: "Create Account" }).click();
 
     // Wait a moment for any potential navigation or error messages

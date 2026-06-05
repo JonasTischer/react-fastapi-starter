@@ -31,6 +31,10 @@ if [ -f /.dockerenv ]; then
     WATCHER_PID=$!
 else
     echo "Running locally with uv"
+    if [ ! -f .env ]; then
+        echo "backend/.env missing — run 'just setup' (or 'cp .env.example .env') first." >&2
+        exit 1
+    fi
     uv run uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload &
     SERVER_PID=$!
     uv run python watcher.py &

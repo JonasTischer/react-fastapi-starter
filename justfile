@@ -9,10 +9,31 @@ help:
     @just --list
 
 #
-setup: ## Setup the project
-    cd {{FRONTEND_DIR}} && pnpm install
-    cd {{BACKEND_DIR}} && uv sync --all-extras --dev
-    cd {{BACKEND_DIR}} && uv run pre-commit install -c ../.pre-commit-config.yaml
+setup: ## Create env files, install deps (frontend + backend), and install pre-commit hooks
+    #!/usr/bin/env bash
+    set -euo pipefail
+    echo "==> Creating env files (if missing)"
+    if [ ! -f {{BACKEND_DIR}}/.env ]; then
+        cp {{BACKEND_DIR}}/.env.example {{BACKEND_DIR}}/.env
+        echo "    created {{BACKEND_DIR}}/.env"
+    else
+        echo "    {{BACKEND_DIR}}/.env already exists"
+    fi
+    if [ ! -f {{FRONTEND_DIR}}/.env.local ]; then
+        cp {{FRONTEND_DIR}}/.env.local.example {{FRONTEND_DIR}}/.env.local
+        echo "    created {{FRONTEND_DIR}}/.env.local"
+    else
+        echo "    {{FRONTEND_DIR}}/.env.local already exists"
+    fi
+    echo "==> Installing frontend dependencies"
+    (cd {{FRONTEND_DIR}} && pnpm install)
+    echo "==> Installing backend dependencies + pre-commit hooks"
+    (cd {{BACKEND_DIR}} && uv sync --all-extras --dev && uv run pre-commit install -c ../.pre-commit-config.yaml)
+    echo ""
+    echo "✅ Setup complete. Next steps:"
+    echo "   just docker-up-db   # start Postgres"
+    echo "   just migrate        # apply database migrations"
+    echo "   just dev            # run backend + frontend"
 
 # Backend commands
 start-backend: ## Start the backend server with FastAPI and hot reload
@@ -67,6 +88,13 @@ typecheck-backend: ## Run ty type checking (backend only)
 dev: ## Start both backend and frontend servers concurrently (Ctrl+C stops both)
     #!/usr/bin/env bash
     set -euo pipefail
+
+    if [ ! -d "{{FRONTEND_DIR}}/node_modules" ] || [ ! -f "{{BACKEND_DIR}}/.env" ]; then
+        echo "❌ Project not set up yet. Run 'just setup' first." >&2
+        echo "   (missing {{FRONTEND_DIR}}/node_modules and/or {{BACKEND_DIR}}/.env)" >&2
+        exit 1
+    fi
+
     echo "Starting backend and frontend servers..."
 
     terminate_tree() {

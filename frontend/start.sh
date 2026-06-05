@@ -2,6 +2,11 @@
 
 set -euo pipefail
 
+if [ ! -d node_modules ]; then
+    echo "frontend/node_modules missing — run 'just setup' (or 'pnpm install') first." >&2
+    exit 1
+fi
+
 pnpm run dev &
 DEV_PID=$!
 node watcher.cjs &

@@ -42,22 +42,24 @@ The whole stack runs locally with `just dev` or in containers via `docker compos
 ## Getting Started
 
 ### First-Time Setup
-1. Copy environment templates and adjust secrets as needed:
-   ```bash
-   cp backend/.env.example backend/.env
-   cp frontend/.env.local.example frontend/.env.local
-   ```
-2. Install backend and frontend dependencies and set up pre-commit hooks:
+1. Create the env files, install dependencies (frontend + backend), and set up
+   pre-commit hooks — all in one step:
    ```bash
    just setup
    ```
-3. Start Postgres (if you are not running a local instance already):
+   This copies `backend/.env` and `frontend/.env.local` from their `.example`
+   templates if they don't exist yet. Adjust secrets in `backend/.env` as needed.
+2. Start Postgres (if you are not running a local instance already):
    ```bash
    just docker-up-db
    ```
-4. Apply database migrations:
+3. Apply database migrations:
    ```bash
    just migrate
+   ```
+4. Run the stack:
+   ```bash
+   just dev
    ```
 
 ### Daily Development Flow

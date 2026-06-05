@@ -12,6 +12,19 @@ class Settings(BaseSettings):
     DATABASE_URL: str
     TEST_DATABASE_URL: str | None = None
     EXPIRE_ON_COMMIT: bool = False
+    # Connection pool tuning (per worker). pre_ping recycles stale connections.
+    DB_POOL_SIZE: int = 5
+    DB_MAX_OVERFLOW: int = 10
+    DB_POOL_PRE_PING: bool = True
+
+    # Rate limiting (slowapi). Disable in tests/e2e to avoid flakiness.
+    RATE_LIMIT_ENABLED: bool = True
+    RATE_LIMIT_DEFAULT: str = "200/minute"
+    RATE_LIMIT_REGISTER: str = "20/minute"
+
+    # Error tracking (Sentry). Leave DSN empty to disable.
+    SENTRY_DSN: str | None = None
+    SENTRY_TRACES_SAMPLE_RATE: float = 0.0
 
     # User
     ACCESS_SECRET_KEY: str

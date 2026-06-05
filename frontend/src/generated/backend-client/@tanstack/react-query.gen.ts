@@ -3,8 +3,8 @@
 import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { authJwtLogin, authJwtLogout, createItem, currentUser, deleteItem, health, listItems, type Options, registerRegister, resetForgotPassword, resetResetPassword, updateCurrentUser, updateItem } from '../sdk.gen';
-import type { AuthJwtLoginData, AuthJwtLoginError, AuthJwtLoginResponse, AuthJwtLogoutData, AuthJwtLogoutResponse, CreateItemData, CreateItemError, CreateItemResponse, CurrentUserData, CurrentUserResponse, DeleteItemData, DeleteItemError, DeleteItemResponse, HealthData, HealthResponse, ListItemsData, ListItemsResponse, RegisterRegisterData, RegisterRegisterError, RegisterRegisterResponse, ResetForgotPasswordData, ResetForgotPasswordError, ResetResetPasswordData, ResetResetPasswordError, UpdateCurrentUserData, UpdateCurrentUserError, UpdateCurrentUserResponse, UpdateItemData, UpdateItemError, UpdateItemResponse } from '../types.gen';
+import { authJwtLogin, authJwtLogout, createItem, currentUser, deleteItem, health, healthReady, listItems, type Options, registerRegister, resetForgotPassword, resetResetPassword, updateCurrentUser, updateItem } from '../sdk.gen';
+import type { AuthJwtLoginData, AuthJwtLoginError, AuthJwtLoginResponse, AuthJwtLogoutData, AuthJwtLogoutResponse, CreateItemData, CreateItemError, CreateItemResponse, CurrentUserData, CurrentUserResponse, DeleteItemData, DeleteItemError, DeleteItemResponse, HealthData, HealthReadyData, HealthResponse, ListItemsData, ListItemsResponse, RegisterRegisterData, RegisterRegisterError, RegisterRegisterResponse, ResetForgotPasswordData, ResetForgotPasswordError, ResetResetPasswordData, ResetResetPasswordError, UpdateCurrentUserData, UpdateCurrentUserError, UpdateCurrentUserResponse, UpdateItemData, UpdateItemError, UpdateItemResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -44,7 +44,7 @@ export const healthQueryKey = (options?: Options<HealthData>) => createQueryKey(
 /**
  * Health
  *
- * Liveness/readiness probe used by Docker healthchecks and CI.
+ * Liveness probe — the process is up. Does not touch the database.
  */
 export const healthOptions = (options?: Options<HealthData>) => queryOptions<HealthResponse, DefaultError, HealthResponse, ReturnType<typeof healthQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
@@ -57,6 +57,26 @@ export const healthOptions = (options?: Options<HealthData>) => queryOptions<Hea
         return data;
     },
     queryKey: healthQueryKey(options)
+});
+
+export const healthReadyQueryKey = (options?: Options<HealthReadyData>) => createQueryKey('healthReady', options);
+
+/**
+ * Health Ready
+ *
+ * Readiness probe — verifies the database is reachable (SELECT 1).
+ */
+export const healthReadyOptions = (options?: Options<HealthReadyData>) => queryOptions<unknown, DefaultError, unknown, ReturnType<typeof healthReadyQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await healthReady({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: healthReadyQueryKey(options)
 });
 
 /**

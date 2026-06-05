@@ -128,51 +128,51 @@ export function Pricing() {
 						for everyone.
 					</h2>
 					<p className="mt-4 text-lg text-slate-400">
-						It doesn’t matter what size your business is, our software won’t
-						work well for you.
+						Example tiers to get you started — Stripe is already a dependency,
+						so wire these up and start charging.
 					</p>
 				</div>
 				<div className="-mx-4 mt-16 grid max-w-2xl grid-cols-1 gap-y-10 sm:mx-auto lg:-mx-8 lg:max-w-none lg:grid-cols-3 xl:mx-0 xl:gap-x-8">
 					<Plan
-						name="Starter"
+						name="Hobby"
 						price="$9"
-						description="Good for anyone who is self-employed and just getting started."
+						description="For side projects and getting an idea off the ground."
 						href="/register"
 						features={[
-							"Send 10 quotes and invoices",
-							"Connect up to 2 bank accounts",
-							"Track up to 15 expenses per month",
-							"Manual payroll support",
-							"Export up to 3 reports",
+							"Up to 3 projects",
+							"Email & password auth",
+							"Community support",
+							"1 GB storage",
+							"Basic analytics",
 						]}
 					/>
 					<Plan
 						featured
-						name="Small business"
+						name="Pro"
 						price="$15"
-						description="Perfect for small / medium sized businesses."
+						description="For growing teams shipping product fast."
 						href="/register"
 						features={[
-							"Send 25 quotes and invoices",
-							"Connect up to 5 bank accounts",
-							"Track up to 50 expenses per month",
-							"Automated payroll support",
-							"Export up to 12 reports",
-							"Bulk reconcile transactions",
-							"Track in multiple currencies",
+							"Unlimited projects",
+							"SSO & Google OAuth",
+							"Priority support",
+							"50 GB storage",
+							"Advanced analytics",
+							"Audit logs",
+							"Custom domains",
 						]}
 					/>
 					<Plan
 						name="Enterprise"
 						price="$39"
-						description="For even the biggest enterprise companies."
+						description="For organizations with scale and compliance needs."
 						href="/register"
 						features={[
-							"Send unlimited quotes and invoices",
-							"Connect up to 15 bank accounts",
-							"Track up to 200 expenses per month",
-							"Automated payroll support",
-							"Export up to 25 reports, including TPS",
+							"Everything in Pro",
+							"Dedicated support & SLA",
+							"Unlimited storage",
+							"SSO enforcement",
+							"On-prem deploy option",
 						]}
 					/>
 				</div>

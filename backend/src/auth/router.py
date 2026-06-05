@@ -5,6 +5,7 @@ from fastapi_users import exceptions, schemas
 from fastapi_users.router.common import ErrorCode
 
 from src.core.config import settings
+from src.core.limiter import limiter
 from .service import (
     fastapi_users,
     auth_backend,
@@ -38,6 +39,7 @@ router.include_router(
     tags=["auth"],
     name="register:register",
 )
+@limiter.limit(settings.RATE_LIMIT_REGISTER)
 async def register(
     request: Request,
     user_create: UserCreate,

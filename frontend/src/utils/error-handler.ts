@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/react";
 import { toast } from "sonner";
 
 function getErrorMessage(error: unknown, defaultMessage: string) {
@@ -31,5 +32,7 @@ function getErrorMessage(error: unknown, defaultMessage: string) {
 export const handleApiError = (error: unknown, defaultMessage: string) => {
 	const message = getErrorMessage(error, defaultMessage);
 	toast.error(message);
-	// Add Sentry/Bugsnag logging here
+	if (import.meta.env.VITE_SENTRY_DSN) {
+		Sentry.captureException(error, { extra: { defaultMessage } });
+	}
 };

@@ -11,7 +11,7 @@
           "health"
         ],
         "summary": "Health",
-        "description": "Liveness/readiness probe used by Docker healthchecks and CI.",
+        "description": "Liveness probe \u2014 the process is up. Does not touch the database.",
         "operationId": "health",
         "responses": {
           "200": {
@@ -25,6 +25,26 @@
                   "type": "object",
                   "title": "Response Health-Health"
                 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Health Ready",
+        "description": "Readiness probe \u2014 verifies the database is reachable (SELECT 1).",
+        "operationId": "health_ready",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
               }
             }
           }

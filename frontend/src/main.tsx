@@ -1,11 +1,22 @@
+import * as Sentry from "@sentry/react";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { ThemeProvider } from "next-themes";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Toaster } from "sonner";
 
+import { DefaultCatchBoundary } from "@/components/error-boundary";
 import { ModalProvider } from "@/providers/modal-provider";
 import { QueryProvider } from "@/providers/query-provider";
+
+// Error tracking. No-op unless VITE_SENTRY_DSN is set, so dev/test are unaffected.
+if (import.meta.env.VITE_SENTRY_DSN) {
+	Sentry.init({
+		dsn: import.meta.env.VITE_SENTRY_DSN,
+		environment: import.meta.env.MODE,
+		tracesSampleRate: 0,
+	});
+}
 
 // Self-hosted fonts (no runtime Google Fonts dependency). These packages ship
 // the @font-face declarations; index.css maps them onto the --font-* tokens.
@@ -21,6 +32,7 @@ const router = createRouter({
 	routeTree,
 	defaultPreload: "intent",
 	scrollRestoration: true,
+	defaultErrorComponent: DefaultCatchBoundary,
 });
 
 // Register the router instance for type-safety across the app (Link `to`,

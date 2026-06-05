@@ -9,8 +9,12 @@ from src.core.config import settings
 from src.auth.models import User, Base
 
 from src.core.database import get_user_db, get_async_session
+from src.core.limiter import limiter
 from src.main import app
 from src.auth.service import get_jwt_strategy
+
+# Disable rate limiting in tests so repeated register/login calls don't trip it.
+limiter.enabled = False
 
 
 @pytest_asyncio.fixture(scope="function")

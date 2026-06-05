@@ -244,6 +244,20 @@ export type HealthResponses = {
 
 export type HealthResponse = HealthResponses[keyof HealthResponses];
 
+export type HealthReadyData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/health/ready';
+};
+
+export type HealthReadyResponses = {
+    /**
+     * Successful Response
+     */
+    200: unknown;
+};
+
 export type AuthJwtLoginData = {
     body: Login;
     path?: never;

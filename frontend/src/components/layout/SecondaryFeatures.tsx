@@ -17,10 +17,10 @@ interface Feature {
 
 const features: Array<Feature> = [
 	{
-		name: "Reporting",
-		summary: "Stay on top of things with always up-to-date reporting features.",
+		name: "Type safety",
+		summary: "End-to-end types from the database all the way to the UI.",
 		description:
-			"We talked about reporting in the section above but we needed three items here, so mentioning it one more time for posterity.",
+			"Pydantic on the backend, Zod and TypeScript on the frontend, and a generated client that ties the two together — refactor fearlessly.",
 		image: screenshotProfitLoss,
 		icon: function ReportingIcon() {
 			const id = useId();
@@ -51,11 +51,10 @@ const features: Array<Feature> = [
 		},
 	},
 	{
-		name: "Inventory",
-		summary:
-			"Never lose track of what’s in stock with accurate inventory tracking.",
+		name: "Hot reload",
+		summary: "Edit a backend schema and watch the typed client update itself.",
 		description:
-			"We don’t offer this as part of our software but that statement is inarguably true. Accurate inventory tracking would help you for sure.",
+			"A watcher regenerates the OpenAPI client whenever your routes change, so the frontend stays in sync without a manual build step.",
 		image: screenshotInventory,
 		icon: function InventoryIcon() {
 			return (
@@ -79,11 +78,10 @@ const features: Array<Feature> = [
 		},
 	},
 	{
-		name: "Contacts",
-		summary:
-			"Organize all of your contacts, service providers, and invoices in one place.",
+		name: "Dockerized",
+		summary: "Run the whole stack locally or in containers with one command.",
 		description:
-			"This also isn’t actually a feature, it’s just some friendly advice. We definitely recommend that you do this, you’ll feel really organized and professional.",
+			"Docker Compose for development, plus hardened production images — an Nginx-served frontend and a slim uv-based backend that runs migrations on startup.",
 		image: screenshotContacts,
 		icon: function ContactsIcon() {
 			return (
@@ -225,17 +223,17 @@ export function SecondaryFeatures() {
 	return (
 		<section
 			id="secondary-features"
-			aria-label="Features for simplifying everyday business tasks"
+			aria-label="Features for a great developer experience"
 			className="pt-20 pb-14 sm:pt-32 sm:pb-20 lg:pb-32"
 		>
 			<Container>
 				<div className="mx-auto max-w-2xl md:text-center">
 					<h2 className="font-display text-3xl tracking-tight text-slate-900 sm:text-4xl">
-						Simplify everyday business tasks.
+						Built for developer experience.
 					</h2>
 					<p className="mt-4 text-lg tracking-tight text-slate-700">
-						Because you’d probably be a little confused if we suggested you
-						complicate your everyday business tasks instead.
+						Sensible defaults, fast feedback loops, and the boring-but-important
+						pieces already wired up so you can stay in flow.
 					</p>
 				</div>
 				<FeaturesMobile />

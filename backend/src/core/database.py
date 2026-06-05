@@ -18,7 +18,12 @@ async_db_connection_url = (
     f"{parsed_db_url.path}"
 )
 
-engine = create_async_engine(async_db_connection_url)
+engine = create_async_engine(
+    async_db_connection_url,
+    pool_size=settings.DB_POOL_SIZE,
+    max_overflow=settings.DB_MAX_OVERFLOW,
+    pool_pre_ping=settings.DB_POOL_PRE_PING,
+)
 
 async_session_maker = async_sessionmaker(
     engine, expire_on_commit=settings.EXPIRE_ON_COMMIT

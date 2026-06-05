@@ -11,28 +11,28 @@ import screenshotVatReturns from "@/images/screenshots/vat-returns.png";
 
 const features = [
 	{
-		title: "Payroll",
+		title: "Type-safe API",
 		description:
-			"Keep track of everyone's salaries and whether or not they've been paid. Direct deposit not supported.",
+			"A fully typed client is generated from your FastAPI OpenAPI schema, so the frontend and backend can never drift out of sync.",
+		image: screenshotReporting,
+	},
+	{
+		title: "Authentication",
+		description:
+			"Cookie-based JWT auth with fastapi-users — register, login, password reset, and Google OAuth, ready out of the box.",
 		image: screenshotPayroll,
 	},
 	{
-		title: "Claim expenses",
+		title: "Database & migrations",
 		description:
-			"All of your receipts organized into one place, as long as you don't mind typing in the data by hand.",
+			"Async PostgreSQL with SQLAlchemy and Alembic, wired up and migration-ready from the very first commit.",
 		image: screenshotExpenses,
 	},
 	{
-		title: "VAT handling",
+		title: "Testing & CI",
 		description:
-			"We only sell our software to companies who don't deal with VAT at all, so technically we do all the VAT stuff they need.",
+			"Pytest, Vitest, and Playwright with GitHub Actions pipelines, so you ship changes with confidence.",
 		image: screenshotVatReturns,
-	},
-	{
-		title: "Reporting",
-		description:
-			"Easily export your data into an Excel spreadsheet where you can do whatever the hell you want with it.",
-		image: screenshotReporting,
 	},
 ];
 
@@ -59,7 +59,7 @@ export function PrimaryFeatures() {
 	return (
 		<section
 			id="features"
-			aria-label="Features for running your books"
+			aria-label="Features for building your product"
 			className="relative overflow-hidden bg-blue-600 pt-20 pb-28 sm:py-32"
 		>
 			<img
@@ -72,11 +72,11 @@ export function PrimaryFeatures() {
 			<Container className="relative">
 				<div className="max-w-2xl md:mx-auto md:text-center xl:max-w-none">
 					<h2 className="font-display text-3xl tracking-tight text-white sm:text-4xl md:text-5xl">
-						Everything you need to run your books.
+						Everything you need to build your product.
 					</h2>
 					<p className="mt-6 text-lg tracking-tight text-blue-100">
-						Well everything you need if you aren’t that picky about minor
-						details like tax compliance.
+						An opinionated, type-safe stack so you can focus on features instead
+						of plumbing.
 					</p>
 				</div>
 				<TabGroup

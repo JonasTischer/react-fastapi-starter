@@ -4,53 +4,53 @@ import backgroundImage from "@/images/background-faqs.jpg";
 const faqs = [
 	[
 		{
-			question: "Does TaxPal handle VAT?",
+			question: "What's in the stack?",
 			answer:
-				"Well no, but if you move your company offshore you can probably ignore it.",
+				"React + Vite with TanStack Router and Query on the frontend, FastAPI + SQLAlchemy + PostgreSQL on the backend, and a typed client generated from the OpenAPI schema.",
 		},
 		{
-			question: "Can I pay for my subscription via purchase order?",
-			answer: "Absolutely, we are happy to take your money in all forms.",
+			question: "How does authentication work?",
+			answer:
+				"fastapi-users with HTTPOnly-cookie JWT auth, password reset, and optional Google OAuth. The frontend never touches the token directly.",
 		},
 		{
-			question: "How do I apply for a job at TaxPal?",
+			question: "Do I have to use Docker?",
 			answer:
-				"We only hire our customers, so subscribe for a minimum of 6 months and then let’s talk.",
+				"No. `just dev` runs everything natively. Docker Compose is provided for a one-command stack and for production-like images.",
 		},
 	],
 	[
 		{
-			question: "What was that testimonial about tax fraud all about?",
+			question: "How is the API client kept in sync?",
 			answer:
-				"TaxPal is just a software application, ultimately your books are your responsibility.",
+				"A watcher regenerates the typed client from the OpenAPI schema whenever your backend routes change, so the frontend always matches the API.",
 		},
 		{
-			question:
-				"TaxPal sounds horrible but why do I still feel compelled to purchase?",
+			question: "Is it ready for production?",
 			answer:
-				"This is the power of excellent visual design. You just can’t resist it, no matter how poorly it actually functions.",
+				"It ships hardened production Docker images, rate limiting, security headers, health/readiness probes, and CI — see the Production section of the README.",
 		},
 		{
-			question:
-				"I found other companies called TaxPal, are you sure you can use this name?",
+			question: "Can I swap the UI library?",
 			answer:
-				"Honestly not sure at all. We haven’t actually incorporated or anything, we just thought it sounded cool and made this website.",
+				"Yes. It uses shadcn/ui on Tailwind, so components live in your repo and are yours to edit or replace.",
 		},
 	],
 	[
 		{
-			question: "How do you generate reports?",
+			question: "How do I run the tests?",
 			answer:
-				"You just tell us what data you need a report for, and we get our kids to create beautiful charts for you using only the finest crayons.",
+				"`just test` runs the backend pytest suite and the frontend Vitest unit tests; `just test-e2e` runs the Playwright end-to-end suite.",
 		},
 		{
-			question: "Can we expect more inventory features?",
-			answer: "In life it’s really better to never expect anything at all.",
+			question: "How do migrations work?",
+			answer:
+				'Alembic. Use `just create-migration MESSAGE="..."` to autogenerate one and `just migrate` to apply it. Production images run migrations on startup.',
 		},
 		{
-			question: "I lost my password, how do I get into my account?",
+			question: "What license is it under?",
 			answer:
-				"Send us an email and we will send you a copy of our latest password spreadsheet so you can find your information.",
+				"MIT — use it for personal or commercial projects, no strings attached.",
 		},
 	],
 ];

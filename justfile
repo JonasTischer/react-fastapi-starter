@@ -35,6 +35,13 @@ setup: ## Create env files, install deps (frontend + backend), and install pre-c
     echo "   just migrate        # apply database migrations"
     echo "   just dev            # run backend + frontend"
 
+gen-secrets: ## Print strong secret values (openssl rand) for backend/.env
+    #!/usr/bin/env bash
+    echo "# Copy these into backend/.env (each is a fresh 32-byte hex secret):"
+    echo "ACCESS_SECRET_KEY=$(openssl rand -hex 32)"
+    echo "RESET_PASSWORD_SECRET_KEY=$(openssl rand -hex 32)"
+    echo "VERIFICATION_SECRET_KEY=$(openssl rand -hex 32)"
+
 # Backend commands
 start-backend: ## Start the backend server with FastAPI and hot reload
 	cd {{BACKEND_DIR}} && ./start.sh

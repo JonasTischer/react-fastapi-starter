@@ -7,5 +7,5 @@ set -euo pipefail
 echo "Applying database migrations..."
 alembic upgrade head
 
-echo "Starting Uvicorn (production, no reload)..."
-exec uvicorn src.main:app --host 0.0.0.0 --port 8000
+echo "Starting Uvicorn (production, no reload, ${WEB_CONCURRENCY:-2} workers)..."
+exec uvicorn src.main:app --host 0.0.0.0 --port 8000 --workers "${WEB_CONCURRENCY:-2}"

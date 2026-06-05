@@ -7,6 +7,8 @@ interface ImportMetaEnv {
 	readonly VITE_GOOGLE_OAUTH_ENABLED?: string;
 	/** "true" to disable the TanStack Router devtools (used during e2e runs) */
 	readonly VITE_DISABLE_DEVTOOLS?: string;
+	/** Sentry DSN for frontend error tracking (leave empty to disable) */
+	readonly VITE_SENTRY_DSN?: string;
 }
 
 interface ImportMeta {

@@ -15,3 +15,14 @@ async def test_health_returns_ok():
 
     assert response.status_code == status.HTTP_200_OK
     assert response.json() == {"status": "ok"}
+
+
+@pytest.mark.asyncio(loop_scope="function")
+async def test_health_ready_checks_database(test_client):
+    """The readiness probe reports ok when the database is reachable."""
+    response = await test_client.get("/health/ready")
+
+    assert response.status_code == status.HTTP_200_OK
+    body = response.json()
+    assert body["status"] == "ok"
+    assert body["database"] == "ok"

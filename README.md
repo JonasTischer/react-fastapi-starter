@@ -123,6 +123,8 @@ The repo ships optimized production images and a separate compose file:
 Bring the whole production-like stack up (Postgres + backend + Nginx frontend, with health checks and migrations):
 
 ```bash
+# Generate strong secrets (or use your own):
+just gen-secrets
 export ACCESS_SECRET_KEY=...           # each >= 32 chars
 export RESET_PASSWORD_SECRET_KEY=...
 export VERIFICATION_SECRET_KEY=...
@@ -132,3 +134,25 @@ docker compose -f docker-compose.prod.yml up --build --wait
 The frontend is served on `http://localhost:8080` and the API on `http://localhost:8000`.
 
 > **Note:** Production sets `COOKIE_SECURE=true`, so browsers only send the auth cookie over HTTPS. Front the stack with a TLS terminator (Caddy, Traefik, or your cloud load balancer) and set `VITE_API_BASE_URL`, `CORS_ORIGINS`, and `FRONTEND_URL` to your real `https://` origins.
+
+### What's already hardened
+- **Rate limiting** — `slowapi` applies a global per-IP default (`RATE_LIMIT_DEFAULT`) plus a stricter limit on `/auth/register`. Tune via `RATE_LIMIT_*`; set `RATE_LIMIT_ENABLED=false` to disable (used by the test/e2e suites).
+- **Security headers** — the Nginx frontend sends `Content-Security-Policy`, `Strict-Transport-Security`, `X-Frame-Options`, `X-Content-Type-Options`, and `Referrer-Policy`. Tighten the CSP `connect-src` to your real API/Sentry origins.
+- **Error tracking** — set `SENTRY_DSN` (backend) and `VITE_SENTRY_DSN` (frontend) to stream errors to Sentry. Both are no-ops when unset.
+- **Health & readiness** — `GET /health` is a liveness probe; `GET /health/ready` checks the database (`SELECT 1`). The prod compose healthcheck uses readiness.
+- **Workers** — the prod backend runs `uvicorn --workers ${WEB_CONCURRENCY:-2}` (migrations run once on startup via `prestart.sh`). Set `WEB_CONCURRENCY` to roughly your CPU count.
+- **Error boundary** — a render error in any route shows a recovery screen (and reports to Sentry) instead of a blank page.
+
+### Email verification
+The verification flow is **scaffolded but off by default**: routes are guarded by `current_active_user` (active, not necessarily verified), and `on_after_register` does not send a verification email — so registration works out of the box without a configured SMTP server. To require verified emails:
+1. Include `fastapi_users.get_verify_router(...)` in `backend/src/auth/router.py`.
+2. Call `await self.request_verify(user, request)` from `on_after_register` in `backend/src/auth/service.py` (sends the email).
+3. Swap the route dependency to `current_active_verified_user`.
+
+### Database — backups & connection pooling
+- **Pooling** is configurable per worker via `DB_POOL_SIZE`, `DB_MAX_OVERFLOW`, and `DB_POOL_PRE_PING` (pre-ping recycles stale connections — recommended on). Size the pool to your worker count and database `max_connections`.
+- **Backups** — the compose Postgres uses a named volume; for production use a managed Postgres with automated backups, or schedule `pg_dump`:
+  ```bash
+  docker compose exec db pg_dump -U postgres mydatabase > backup_$(date +%F).sql
+  ```
+- **Migrations** run automatically on container start in production (`prestart.sh`); locally use `just migrate`.

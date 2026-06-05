@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 import { Button } from "@/components/layout/Button";
 import { Container } from "@/components/layout/Container";
 import logoLaravel from "@/images/logos/laravel.svg";
@@ -73,7 +71,7 @@ export function Hero() {
 							>
 								{group.map((company) => (
 									<li key={company.name} className="flex">
-										<Image src={company.logo} alt={company.name} unoptimized />
+										<img src={company.logo} alt={company.name} />
 									</li>
 								))}
 							</ul>

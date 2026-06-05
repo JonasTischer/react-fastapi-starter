@@ -1,7 +1,5 @@
-"use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -73,10 +71,10 @@ export function SignUpForm() {
 		<Card className="w-full max-w-lg">
 			<CardHeader className="text-center lg:text-left">
 				<CardTitle className="text-2xl font-bold tracking-tight">
-					FastAPI Next Account
+					React FastAPI Account
 				</CardTitle>
 				<CardDescription className="mt-1 text-sm">
-					Create your FastAPI Next account
+					Create your React FastAPI account
 				</CardDescription>
 			</CardHeader>
 			<CardContent>
@@ -175,20 +173,17 @@ export function SignUpForm() {
 									<div className="space-y-1 leading-none">
 										<FormLabel className="text-xs font-normal leading-snug text-muted-foreground">
 											I agree to the{" "}
-											<Link
-												href="/agb"
-												className="underline hover:text-primary"
-											>
+											<a href="/agb" className="underline hover:text-primary">
 												Terms of Service
-											</Link>{" "}
+											</a>{" "}
 											and the{" "}
-											<Link
+											<a
 												href="/datenschutz"
 												className="underline hover:text-primary"
 											>
 												Data Privacy Policy
-											</Link>{" "}
-											of FastAPI Next.
+											</a>{" "}
+											of React FastAPI.
 										</FormLabel>
 										<FormMessage />
 									</div>
@@ -210,7 +205,7 @@ export function SignUpForm() {
 					<p className="text-xs text-muted-foreground">
 						Already have an account?{" "}
 						<Link
-							href="/login"
+							to="/login"
 							className="font-medium text-primary hover:underline"
 						>
 							Login

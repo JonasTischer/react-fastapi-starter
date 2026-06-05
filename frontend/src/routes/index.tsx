@@ -1,3 +1,5 @@
+import { createFileRoute } from "@tanstack/react-router";
+
 import { CallToAction } from "@/components/layout/CallToAction";
 import { Faqs } from "@/components/layout/Faqs";
 import { Footer } from "@/components/layout/Footer";
@@ -8,7 +10,11 @@ import { PrimaryFeatures } from "@/components/layout/PrimaryFeatures";
 import { SecondaryFeatures } from "@/components/layout/SecondaryFeatures";
 import { Testimonials } from "@/components/layout/Testimonials";
 
-export default function Home() {
+export const Route = createFileRoute("/")({
+	component: Home,
+});
+
+function Home() {
 	return (
 		<>
 			<Header />

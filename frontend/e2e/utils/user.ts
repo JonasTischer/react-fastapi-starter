@@ -34,6 +34,6 @@ export async function registerViaUi(
   await page.getByLabel("Email").fill(email);
   await page.getByLabel("Create Password").fill(password);
   await page.getByLabel("Confirm Password").fill(password);
-  await page.getByLabel("I agree to the Terms of Service and the Data Privacy Policy of FastAPI Next.").check();
+  await page.getByLabel("I agree to the Terms of Service and the Data Privacy Policy of React FastAPI.").check();
   await page.getByRole("button", { name: "Create Account" }).click();
 }

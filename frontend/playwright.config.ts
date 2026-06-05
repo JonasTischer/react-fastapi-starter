@@ -1,7 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
 const port = Number(
-  process.env.PLAYWRIGHT_WEB_PORT ?? process.env.PORT ?? 3000,
+  process.env.PLAYWRIGHT_WEB_PORT ?? process.env.PORT ?? 5173,
 );
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://127.0.0.1:${port}`;
 const apiBaseUrl =

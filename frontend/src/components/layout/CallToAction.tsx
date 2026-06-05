@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 import { Button } from "@/components/layout/Button";
 import { Container } from "@/components/layout/Container";
 import backgroundImage from "@/images/background-call-to-action.jpg";
@@ -10,13 +8,12 @@ export function CallToAction() {
 			id="get-started-today"
 			className="relative overflow-hidden bg-blue-600 py-32"
 		>
-			<Image
+			<img
 				className="absolute top-1/2 left-1/2 max-w-none -translate-x-1/2 -translate-y-1/2"
 				src={backgroundImage}
 				alt=""
 				width={2347}
 				height={1244}
-				unoptimized
 			/>
 			<Container className="relative">
 				<div className="mx-auto max-w-lg text-center">

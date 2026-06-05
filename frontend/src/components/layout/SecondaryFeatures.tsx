@@ -1,7 +1,4 @@
-"use client";
-
 import { useId } from "react";
-import Image, { type ImageProps } from "next/image";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import clsx from "clsx";
 
@@ -14,7 +11,7 @@ interface Feature {
 	name: React.ReactNode;
 	summary: string;
 	description: string;
-	image: ImageProps["src"];
+	image: string;
 	icon: React.ComponentType;
 }
 
@@ -155,7 +152,7 @@ function FeaturesMobile() {
 					<div className="relative mt-10 pb-10">
 						<div className="absolute -inset-x-4 top-8 bottom-0 bg-slate-200 sm:-inset-x-6" />
 						<div className="relative mx-auto w-[52.75rem] overflow-hidden rounded-xl bg-white shadow-lg ring-1 shadow-slate-900/5 ring-slate-500/10">
-							<Image
+							<img
 								className="w-full"
 								src={feature.image}
 								alt=""
@@ -206,7 +203,7 @@ function FeaturesDesktop() {
 									aria-hidden={featureIndex !== selectedIndex}
 								>
 									<div className="w-[52.75rem] overflow-hidden rounded-xl bg-white shadow-lg ring-1 shadow-slate-900/5 ring-slate-500/10">
-										<Image
+										<img
 											className="w-full"
 											src={feature.image}
 											alt=""

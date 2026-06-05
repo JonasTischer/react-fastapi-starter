@@ -24,6 +24,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/health", tags=["health"])
+async def health() -> dict[str, str]:
+    """Liveness/readiness probe used by Docker healthchecks and CI."""
+    return {"status": "ok"}
+
+
 app.include_router(auth_router, prefix="/auth")
 app.include_router(items_router, prefix="/items", tags=["items"])
 

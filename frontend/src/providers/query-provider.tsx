@@ -1,9 +1,7 @@
-"use client";
-
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import type { ReactNode } from "react";
 
-// Since QueryClientProvider relies on useContext under the hood, we have to put 'use client' on top
 const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
@@ -21,14 +19,14 @@ const queryClient = new QueryClient({
 });
 
 interface QueryProviderProps {
-	children: React.ReactNode;
+	children: ReactNode;
 }
 
 export const QueryProvider = ({ children }: QueryProviderProps) => {
 	return (
 		<QueryClientProvider client={queryClient}>
 			{children}
-			{process.env.NODE_ENV !== "production" && <ReactQueryDevtools />}
+			{import.meta.env.DEV && <ReactQueryDevtools />}
 		</QueryClientProvider>
 	);
 };

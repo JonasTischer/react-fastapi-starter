@@ -1,5 +1,3 @@
-"use client";
-
 import { useMemo } from "react";
 import type { SingleValue } from "react-select";
 import CreatableSelect from "react-select/creatable";

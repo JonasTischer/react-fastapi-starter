@@ -1,6 +1,3 @@
-"use client";
-
-import Link from "next/link";
 import {
 	Popover,
 	PopoverButton,
@@ -22,7 +19,7 @@ function MobileNavLink({
 	children: React.ReactNode;
 }) {
 	return (
-		<PopoverButton as={Link} href={href} className="block w-full p-2">
+		<PopoverButton as="a" href={href} className="block w-full p-2">
 			{children}
 		</PopoverButton>
 	);
@@ -88,9 +85,9 @@ export function Header() {
 			<Container>
 				<nav className="relative z-50 flex justify-between">
 					<div className="flex items-center md:gap-x-12">
-						<Link href="#" aria-label="Home">
+						<a href="/" aria-label="Home">
 							<Logo width={50} height={50} />
-						</Link>
+						</a>
 						<div className="hidden md:flex md:gap-x-6">
 							<NavLink href="#features">Features</NavLink>
 							<NavLink href="#testimonials">Testimonials</NavLink>

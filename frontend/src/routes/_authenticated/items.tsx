@@ -1,18 +1,22 @@
-"use client";
+import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useItems } from "@/tanstack/features/items/queries";
 import {
 	useCreateItem,
 	useDeleteItem,
 } from "@/tanstack/features/items/mutations";
-import { useState } from "react";
+import { useItems } from "@/tanstack/features/items/queries";
 
-export default function ItemsPage() {
+export const Route = createFileRoute("/_authenticated/items")({
+	component: ItemsPage,
+});
+
+function ItemsPage() {
 	const { data: items, isLoading } = useItems();
 	const createItem = useCreateItem();
 	const deleteItem = useDeleteItem();

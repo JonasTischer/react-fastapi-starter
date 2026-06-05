@@ -1,10 +1,15 @@
+import { createFileRoute } from "@tanstack/react-router";
+
 import { ChartAreaInteractive } from "@/components/chart-area-interactive";
 import { DataTable } from "@/components/data-table";
 import { SectionCards } from "@/components/section-cards";
+import data from "@/data/dashboard.json";
 
-import data from "./data.json";
+export const Route = createFileRoute("/_authenticated/dashboard")({
+	component: DashboardPage,
+});
 
-export default function Page() {
+function DashboardPage() {
 	return (
 		<div className="flex flex-1 flex-col">
 			<div className="@container/main flex flex-1 flex-col gap-2">

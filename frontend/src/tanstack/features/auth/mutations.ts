@@ -6,16 +6,18 @@ import {
 import { getSafeRedirectPath } from "@/lib/auth";
 import { handleApiError } from "@/utils/error-handler";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { useNavigate, useRouter } from "@tanstack/react-router";
 import { toast } from "sonner";
 
 export function useLogin(redirectTo?: string | null) {
+	// `redirectTo` is a free-form (but sanitized) path, so we navigate via the
+	// history API rather than the type-checked `navigate({ to })`.
 	const router = useRouter();
 	return useMutation({
 		...authJwtLoginMutation(),
 		onSuccess: (_data) => {
 			// No need to manually set token - backend sets HTTPOnly cookie automatically
-			router.push(getSafeRedirectPath(redirectTo));
+			router.history.push(getSafeRedirectPath(redirectTo));
 			toast.success("Logged in successfully!");
 		},
 		onError: (error) => {
@@ -25,7 +27,7 @@ export function useLogin(redirectTo?: string | null) {
 }
 
 export function useLogout() {
-	const router = useRouter();
+	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 
 	return useMutation({
@@ -33,14 +35,14 @@ export function useLogout() {
 		onSuccess: () => {
 			// No need to manually clear token - backend clears HTTPOnly cookie automatically
 			queryClient.clear(); // Clear all cached data
-			router.push("/");
+			navigate({ to: "/" });
 		},
 	});
 }
 
 export function useSignUp() {
 	const login = useLogin();
-	const router = useRouter();
+	const navigate = useNavigate();
 	return useMutation({
 		...registerRegisterMutation(),
 		onSuccess: (
@@ -61,7 +63,7 @@ export function useSignUp() {
 				toast.error(
 					"Account created, but auto-login failed. Please log in manually.",
 				);
-				router.push("/login");
+				navigate({ to: "/login" });
 			}
 		},
 		onError: (error) => {

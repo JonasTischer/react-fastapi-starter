@@ -12,6 +12,7 @@
 			"!**/node_modules",
 			"!**/backend-client/**",
 			"!**/src/generated/backend-client/**",
+			"!**/routeTree.gen.ts",
 			"!**/*.css"
 		]
 	},

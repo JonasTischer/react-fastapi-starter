@@ -1,4 +1,6 @@
-"use client";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
+import { toast } from "sonner";
 
 import Logo from "@/components/common/logo";
 import { Button } from "@/components/ui/button";
@@ -13,11 +15,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { resetForgotPassword } from "@/generated/backend-client/sdk.gen";
 import { handleApiError } from "@/utils/error-handler";
-import Link from "next/link";
-import { useState } from "react";
-import { toast } from "sonner";
 
-export default function PasswordResetPage() {
+export const Route = createFileRoute("/password-reset")({
+	component: PasswordResetPage,
+});
+
+function PasswordResetPage() {
 	const [email, setEmail] = useState("");
 	const [isPending, setIsPending] = useState(false);
 	const [sent, setSent] = useState(false);
@@ -45,10 +48,10 @@ export default function PasswordResetPage() {
 				<Logo width={48} height={56} />
 				<div className="flex flex-col items-center">
 					<h1 className="medical-text-gradient text-xl font-semibold tracking-tight">
-						NextJS FastAPI
+						React FastAPI
 					</h1>
 					<p className="text-sm text-muted-foreground">
-						Your NextJS FastAPI Starter Kit
+						Your React FastAPI Starter Kit
 					</p>
 				</div>
 			</div>
@@ -67,7 +70,7 @@ export default function PasswordResetPage() {
 								If an account exists for that email, a reset link has been sent.
 							</p>
 							<Button asChild className="w-full">
-								<Link href="/login">Back to login</Link>
+								<Link to="/login">Back to login</Link>
 							</Button>
 						</div>
 					) : (
@@ -86,7 +89,7 @@ export default function PasswordResetPage() {
 								{isPending ? "Sending..." : "Send reset link"}
 							</Button>
 							<Button asChild variant="ghost" className="w-full">
-								<Link href="/login">Back to login</Link>
+								<Link to="/login">Back to login</Link>
 							</Button>
 						</form>
 					)}

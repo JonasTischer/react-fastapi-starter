@@ -7,7 +7,7 @@ export default defineConfig({
 		"@hey-api/typescript",
 		"@hey-api/schemas",
 		{
-			name: "@hey-api/client-next",
+			name: "@hey-api/client-fetch",
 			runtimeConfigPath: "@/hey-api",
 		},
 		"@tanstack/react-query",

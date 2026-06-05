@@ -113,6 +113,13 @@ export const zLogin = z.object({
     client_secret: z.string().nullish()
 });
 
+/**
+ * Response Health-Health
+ *
+ * Successful Response
+ */
+export const zHealthResponse = z.record(z.string(), z.string());
+
 export const zAuthJwtLoginBody = zLogin;
 
 export const zAuthJwtLoginResponse = z.union([

@@ -3,8 +3,61 @@
 import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { authJwtLogin, authJwtLogout, createItem, currentUser, deleteItem, listItems, type Options, registerRegister, resetForgotPassword, resetResetPassword, updateCurrentUser, updateItem } from '../sdk.gen';
-import type { AuthJwtLoginData, AuthJwtLoginError, AuthJwtLoginResponse, AuthJwtLogoutData, AuthJwtLogoutResponse, CreateItemData, CreateItemError, CreateItemResponse, CurrentUserData, CurrentUserResponse, DeleteItemData, DeleteItemError, DeleteItemResponse, ListItemsData, ListItemsResponse, RegisterRegisterData, RegisterRegisterError, RegisterRegisterResponse, ResetForgotPasswordData, ResetForgotPasswordError, ResetResetPasswordData, ResetResetPasswordError, UpdateCurrentUserData, UpdateCurrentUserError, UpdateCurrentUserResponse, UpdateItemData, UpdateItemError, UpdateItemResponse } from '../types.gen';
+import { authJwtLogin, authJwtLogout, createItem, currentUser, deleteItem, health, listItems, type Options, registerRegister, resetForgotPassword, resetResetPassword, updateCurrentUser, updateItem } from '../sdk.gen';
+import type { AuthJwtLoginData, AuthJwtLoginError, AuthJwtLoginResponse, AuthJwtLogoutData, AuthJwtLogoutResponse, CreateItemData, CreateItemError, CreateItemResponse, CurrentUserData, CurrentUserResponse, DeleteItemData, DeleteItemError, DeleteItemResponse, HealthData, HealthResponse, ListItemsData, ListItemsResponse, RegisterRegisterData, RegisterRegisterError, RegisterRegisterResponse, ResetForgotPasswordData, ResetForgotPasswordError, ResetResetPasswordData, ResetResetPasswordError, UpdateCurrentUserData, UpdateCurrentUserError, UpdateCurrentUserResponse, UpdateItemData, UpdateItemError, UpdateItemResponse } from '../types.gen';
+
+export type QueryKey<TOptions extends Options> = [
+    Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
+        _id: string;
+        _infinite?: boolean;
+        tags?: ReadonlyArray<string>;
+    }
+];
+
+const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, infinite?: boolean, tags?: ReadonlyArray<string>): [
+    QueryKey<TOptions>[0]
+] => {
+    const params: QueryKey<TOptions>[0] = { _id: id, baseUrl: options?.baseUrl || (options?.client ?? client).getConfig().baseUrl } as QueryKey<TOptions>[0];
+    if (infinite) {
+        params._infinite = infinite;
+    }
+    if (tags) {
+        params.tags = tags;
+    }
+    if (options?.body) {
+        params.body = options.body;
+    }
+    if (options?.headers) {
+        params.headers = options.headers;
+    }
+    if (options?.path) {
+        params.path = options.path;
+    }
+    if (options?.query) {
+        params.query = options.query;
+    }
+    return [params];
+};
+
+export const healthQueryKey = (options?: Options<HealthData>) => createQueryKey('health', options);
+
+/**
+ * Health
+ *
+ * Liveness/readiness probe used by Docker healthchecks and CI.
+ */
+export const healthOptions = (options?: Options<HealthData>) => queryOptions<HealthResponse, DefaultError, HealthResponse, ReturnType<typeof healthQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await health({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: healthQueryKey(options)
+});
 
 /**
  * Auth:Jwt.Login
@@ -89,39 +142,6 @@ export const registerRegisterMutation = (options?: Partial<Options<RegisterRegis
         }
     };
     return mutationOptions;
-};
-
-export type QueryKey<TOptions extends Options> = [
-    Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
-        _id: string;
-        _infinite?: boolean;
-        tags?: ReadonlyArray<string>;
-    }
-];
-
-const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, infinite?: boolean, tags?: ReadonlyArray<string>): [
-    QueryKey<TOptions>[0]
-] => {
-    const params: QueryKey<TOptions>[0] = { _id: id, baseUrl: options?.baseUrl || (options?.client ?? client).getConfig().baseUrl } as QueryKey<TOptions>[0];
-    if (infinite) {
-        params._infinite = infinite;
-    }
-    if (tags) {
-        params.tags = tags;
-    }
-    if (options?.body) {
-        params.body = options.body;
-    }
-    if (options?.headers) {
-        params.headers = options.headers;
-    }
-    if (options?.path) {
-        params.path = options.path;
-    }
-    if (options?.query) {
-        params.query = options.query;
-    }
-    return [params];
 };
 
 export const currentUserQueryKey = (options?: Options<CurrentUserData>) => createQueryKey('currentUser', options);

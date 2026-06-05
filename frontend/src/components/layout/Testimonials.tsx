@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 import { Container } from "@/components/layout/Container";
 import avatarImage1 from "@/images/avatars/avatar-1.png";
 import avatarImage2 from "@/images/avatars/avatar-2.png";
@@ -122,7 +120,7 @@ export function Testimonials() {
 													</div>
 												</div>
 												<div className="overflow-hidden rounded-full bg-slate-50">
-													<Image
+													<img
 														className="h-14 w-14 object-cover"
 														src={testimonial.author.image}
 														alt=""

@@ -43,7 +43,7 @@ class Settings(BaseSettings):
     TEMPLATE_DIR: str = "email_templates"
 
     # Frontend
-    FRONTEND_URL: str = "http://localhost:3000"
+    FRONTEND_URL: str = "http://localhost:5173"
 
     # CORS
     CORS_ORIGINS: Set[str]

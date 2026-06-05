@@ -1,7 +1,14 @@
-import Logo from "@/components/common/logo"; // Assuming you have a Logo component
-import { Star } from "lucide-react"; // For testimonial stars
+import { createFileRoute } from "@tanstack/react-router";
+import { Star } from "lucide-react";
+
+import Logo from "@/components/common/logo";
 import { SignUpForm } from "@/components/signup-form";
-export default function SignUpPage() {
+
+export const Route = createFileRoute("/register")({
+	component: SignUpPage,
+});
+
+function SignUpPage() {
 	return (
 		<main className="flex min-h-screen items-stretch bg-linear-to-b from-cyan-50/50 to-teal-50/50 dark:from-transparent dark:to-transparent">
 			{/* Left Branding Column */}
@@ -11,10 +18,10 @@ export default function SignUpPage() {
 					<Logo width={32} height={32} />
 					<div className="flex flex-col">
 						<h1 className="text-lg font-semibold tracking-tight medical-text-gradient">
-							NextJS FastAPI
+							React FastAPI
 						</h1>
 						<p className="text-xs text-muted-foreground">
-							Your NextJS FastAPI Starter Kit
+							Your React FastAPI Starter Kit
 						</p>
 					</div>
 				</div>
@@ -22,10 +29,10 @@ export default function SignUpPage() {
 				{/* Hero Text */}
 				<div className="my-auto max-w-md">
 					<h2 className="text-4xl font-bold tracking-tight mb-4">
-						Your NextJS FastAPI Starter Kit
+						Your React FastAPI Starter Kit
 					</h2>
 					<p className="text-lg text-muted-foreground">
-						Your NextJS FastAPI Starter Kit
+						Your React FastAPI Starter Kit
 					</p>
 
 					{/* Testimonial */}
@@ -39,7 +46,7 @@ export default function SignUpPage() {
 							))}
 						</div>
 						<blockquote className="text-sm text-muted-foreground mb-4">
-							"NextJS FastAPI Starter Kit has revolutionized my workday."
+							"React FastAPI Starter Kit has revolutionized my workday."
 						</blockquote>
 						<div className="flex items-center gap-3">
 							<span className="flex h-10 w-10 shrink-0 overflow-hidden rounded-full items-center justify-center bg-teal-100 dark:bg-teal-900 text-teal-700 dark:text-teal-300 font-medium">

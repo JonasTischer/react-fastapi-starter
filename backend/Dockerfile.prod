@@ -1,0 +1,33 @@
+# syntax=docker/dockerfile:1
+
+# Official uv image bundling Python 3.12 (Debian slim). For full
+# reproducibility pin to a specific uv release, e.g.:
+#   ghcr.io/astral-sh/uv:0.5.18-python3.12-bookworm-slim
+FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
+
+# Compile to bytecode for faster cold starts; copy (not hardlink) into the
+# image layer; never silently download a different Python.
+ENV UV_COMPILE_BYTECODE=1 \
+    UV_LINK_MODE=copy \
+    UV_PYTHON_DOWNLOADS=never \
+    PATH="/app/.venv/bin:$PATH"
+
+WORKDIR /app
+
+# Install runtime dependencies first (no dev group) for layer caching.
+COPY pyproject.toml uv.lock ./
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-dev
+
+# Copy the application source (includes alembic migrations + prestart).
+COPY . .
+
+# Run as an unprivileged user.
+RUN useradd --create-home --uid 1000 appuser \
+    && chown -R appuser:appuser /app
+USER appuser
+
+EXPOSE 8000
+
+# prestart.sh applies migrations, then execs uvicorn without --reload.
+CMD ["./prestart.sh"]

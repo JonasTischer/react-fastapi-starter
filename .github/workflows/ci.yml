@@ -44,6 +44,10 @@ jobs:
         working-directory: ./backend
         run: uv sync --all-extras --dev
 
+      - name: Lint (ruff)
+        working-directory: ./backend
+        run: uv run ruff check .
+
       - name: Type check (ty)
         working-directory: ./backend
         run: |
@@ -52,16 +56,12 @@ jobs:
           echo "$output"
           if echo "$output" | grep -q "^error\["; then exit 1; fi
 
-      - name: Run tests
+      - name: Run tests with coverage
         working-directory: ./backend
-        run: uv run coverage run -m pytest
-
-      - name: Generate XML coverage report
-        working-directory: ./backend
-        run: uv run coverage xml -o coverage.xml
+        run: uv run pytest --cov=src --cov-report=xml --cov-report=term
 
   build-frontend:
-    name: Next.js CI
+    name: Frontend CI (Vite)
 
     runs-on: ubuntu-latest
 
@@ -72,21 +72,35 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 9
+          version: 10
           run_install: false
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "22"
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
 
       - name: Install Node dependencies
         working-directory: ./frontend
         run: pnpm install
 
-      - name: Run tests
+      - name: Lint (Biome)
+        working-directory: ./frontend
+        run: pnpm run lint
+
+      - name: Type check
+        working-directory: ./frontend
+        run: pnpm run typecheck
+
+      - name: Unit tests
         working-directory: ./frontend
         run: pnpm run test
+
+      - name: Build
+        working-directory: ./frontend
+        run: pnpm run build
 
   e2e-tests:
     name: Playwright E2E
@@ -107,8 +121,8 @@ jobs:
       ACCESS_SECRET_KEY: test-access-secret
       RESET_PASSWORD_SECRET_KEY: test-reset-secret
       VERIFICATION_SECRET_KEY: test-verification-secret
-      CORS_ORIGINS: '["http://127.0.0.1:3000","http://localhost:3000"]'
-      API_BASE_URL: http://127.0.0.1:8000
+      CORS_ORIGINS: '["http://127.0.0.1:5173","http://localhost:5173"]'
+      VITE_API_BASE_URL: http://127.0.0.1:8000
       PLAYWRIGHT_API_BASE_URL: http://127.0.0.1:8000
     steps:
       - name: Checkout code
@@ -117,13 +131,15 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 9
+          version: 10
           run_install: false
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "22"
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
 
       - name: Install Node dependencies
         working-directory: ./frontend
@@ -156,7 +172,7 @@ jobs:
           echo $! > ../backend.pid
 
       - name: Wait for backend to be ready
-        run: pnpm dlx wait-on http://127.0.0.1:8000/openapi.json
+        run: pnpm dlx wait-on http://127.0.0.1:8000/health
 
       - name: Run Playwright tests
         working-directory: ./frontend

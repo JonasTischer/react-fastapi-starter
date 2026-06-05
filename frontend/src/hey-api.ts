@@ -8,7 +8,7 @@ import type { CreateClientConfig } from "@/generated/backend-client/client.gen";
  */
 export const createClientConfig: CreateClientConfig = (config) => ({
 	...config,
-	baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+	baseUrl: import.meta.env.VITE_API_BASE_URL,
 	// No auth function needed - cookies are sent automatically
 	headers: {
 		"Content-Type": "application/json",

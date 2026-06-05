@@ -1,4 +1,3 @@
-import Link from "next/link";
 import clsx from "clsx";
 
 const baseStyles = {
@@ -35,7 +34,7 @@ type ButtonProps = (
 	  }
 ) &
 	(
-		| Omit<React.ComponentPropsWithoutRef<typeof Link>, "color">
+		| Omit<React.ComponentPropsWithoutRef<"a">, "color">
 		| (Omit<React.ComponentPropsWithoutRef<"button">, "color"> & {
 				href?: undefined;
 		  })
@@ -56,8 +55,14 @@ export function Button({ className, ...props }: ButtonProps) {
 	);
 
 	return typeof props.href === "undefined" ? (
-		<button className={className} {...props} />
+		<button
+			className={className}
+			{...(props as React.ComponentPropsWithoutRef<"button">)}
+		/>
 	) : (
-		<Link className={className} {...props} />
+		<a
+			className={className}
+			{...(props as React.ComponentPropsWithoutRef<"a">)}
+		/>
 	);
 }

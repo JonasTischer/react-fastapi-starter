@@ -224,6 +224,26 @@ export type Login = {
     client_secret?: string | null;
 };
 
+export type HealthData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/health';
+};
+
+export type HealthResponses = {
+    /**
+     * Response Health-Health
+     *
+     * Successful Response
+     */
+    200: {
+        [key: string]: string;
+    };
+};
+
+export type HealthResponse = HealthResponses[keyof HealthResponses];
+
 export type AuthJwtLoginData = {
     body: Login;
     path?: never;

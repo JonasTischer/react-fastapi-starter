@@ -1,0 +1,77 @@
+# Production-like stack: builds the optimized images (hardened uv backend +
+# Nginx-served static frontend), runs migrations on startup, and wires up
+# health/readiness checks.
+#
+# Usage (secrets are required — there are no insecure defaults in production):
+#   export ACCESS_SECRET_KEY=... RESET_PASSWORD_SECRET_KEY=... VERIFICATION_SECRET_KEY=...
+#   docker compose -f docker-compose.prod.yml up --build --wait
+#
+# Cookie auth requires HTTPS in production (COOKIE_SECURE=true below), so the
+# browser will only send the auth cookie when the app is served over TLS.
+# Front this stack with a TLS terminator (Caddy/Traefik/your cloud LB) and set
+# VITE_API_BASE_URL / CORS_ORIGINS / FRONTEND_URL to your real https origins.
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-mydatabase}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app_network
+
+  backend:
+    build:
+      context: backend
+      dockerfile: Dockerfile.prod
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-password}@db:5432/${POSTGRES_DB:-mydatabase}
+      ACCESS_SECRET_KEY: ${ACCESS_SECRET_KEY:?set ACCESS_SECRET_KEY (>=32 chars) in your environment}
+      RESET_PASSWORD_SECRET_KEY: ${RESET_PASSWORD_SECRET_KEY:?set RESET_PASSWORD_SECRET_KEY (>=32 chars)}
+      VERIFICATION_SECRET_KEY: ${VERIFICATION_SECRET_KEY:?set VERIFICATION_SECRET_KEY (>=32 chars)}
+      CORS_ORIGINS: ${CORS_ORIGINS:-["http://localhost:8080"]}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:8080}
+      ENVIRONMENT: production
+      COOKIE_SECURE: "true"
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - python -c "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health').status==200 else 1)"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app_network
+
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile.prod
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8000}
+        VITE_GOOGLE_OAUTH_ENABLED: ${VITE_GOOGLE_OAUTH_ENABLED:-false}
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+    networks:
+      - app_network
+
+volumes:
+  postgres_data:
+
+networks:
+  app_network:
+    driver: bridge

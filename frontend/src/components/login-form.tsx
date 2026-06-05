@@ -1,8 +1,7 @@
-"use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -17,8 +16,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { getSafeRedirectPath } from "@/lib/auth";
 import { useLogin } from "@/tanstack/features/auth/mutations";
-import { toast } from "sonner";
-import { useSearchParams } from "next/navigation";
 
 const formSchema = z.object({
 	email: z.string().email({
@@ -29,9 +26,8 @@ const formSchema = z.object({
 	}),
 });
 
-export function LoginForm() {
-	const searchParams = useSearchParams();
-	const redirectTo = getSafeRedirectPath(searchParams.get("redirect"));
+export function LoginForm({ redirect }: { redirect?: string }) {
+	const redirectTo = getSafeRedirectPath(redirect);
 	const login = useLogin(redirectTo);
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -53,10 +49,7 @@ export function LoginForm() {
 	const handleGoogleLogin = async () => {
 		try {
 			sessionStorage.setItem("postAuthRedirect", redirectTo);
-			const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(
-				/\/$/,
-				"",
-			);
+			const apiBaseUrl = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "");
 			const response = await fetch(
 				`${apiBaseUrl ?? ""}/auth/google/authorize`,
 				{
@@ -89,7 +82,7 @@ export function LoginForm() {
 				</p>
 			</div>
 
-			{process.env.NEXT_PUBLIC_GOOGLE_OAUTH_ENABLED === "true" && (
+			{import.meta.env.VITE_GOOGLE_OAUTH_ENABLED === "true" && (
 				<>
 					<Button
 						type="button"
@@ -167,7 +160,7 @@ export function LoginForm() {
 										Password
 									</FormLabel>
 									<Link
-										href="/password-reset"
+										to="/password-reset"
 										className="ml-auto inline-block text-xs text-primary hover:underline"
 									>
 										Forgot password?
@@ -198,7 +191,7 @@ export function LoginForm() {
 			<p className="text-center text-xs text-muted-foreground">
 				Don't have an account?{" "}
 				<Link
-					href="/register"
+					to="/register"
 					className="font-medium text-primary hover:underline"
 				>
 					Sign up

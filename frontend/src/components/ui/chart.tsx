@@ -1,7 +1,5 @@
 // @ts-nocheck — shadcn chart.tsx hasn't caught up to recharts v3 prop typings.
 // Runtime works; remove this and `pnpm dlx shadcn@latest add chart` to refresh.
-"use client";
-
 import * as React from "react";
 import * as RechartsPrimitive from "recharts";
 

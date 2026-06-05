@@ -4,8 +4,8 @@ import * as z from 'zod';
 
 import { type Client, type Options as Options2, type TDataShape, urlSearchParamsBodySerializer } from './client';
 import { client } from './client.gen';
-import type { AuthJwtLoginData, AuthJwtLoginErrors, AuthJwtLoginResponses, AuthJwtLogoutData, AuthJwtLogoutErrors, AuthJwtLogoutResponses, CreateItemData, CreateItemErrors, CreateItemResponses, CurrentUserData, CurrentUserResponses, DeleteItemData, DeleteItemErrors, DeleteItemResponses, ListItemsData, ListItemsResponses, RegisterRegisterData, RegisterRegisterErrors, RegisterRegisterResponses, ResetForgotPasswordData, ResetForgotPasswordErrors, ResetForgotPasswordResponses, ResetResetPasswordData, ResetResetPasswordErrors, ResetResetPasswordResponses, UpdateCurrentUserData, UpdateCurrentUserErrors, UpdateCurrentUserResponses, UpdateItemData, UpdateItemErrors, UpdateItemResponses } from './types.gen';
-import { zAuthJwtLoginBody, zAuthJwtLoginResponse, zAuthJwtLogoutResponse, zCreateItemBody, zCreateItemResponse, zCurrentUserResponse, zDeleteItemPath, zDeleteItemResponse, zListItemsResponse, zRegisterRegisterBody, zRegisterRegisterResponse, zResetForgotPasswordBody, zResetResetPasswordBody, zUpdateCurrentUserBody, zUpdateCurrentUserResponse, zUpdateItemBody, zUpdateItemPath, zUpdateItemResponse } from './zod.gen';
+import type { AuthJwtLoginData, AuthJwtLoginErrors, AuthJwtLoginResponses, AuthJwtLogoutData, AuthJwtLogoutErrors, AuthJwtLogoutResponses, CreateItemData, CreateItemErrors, CreateItemResponses, CurrentUserData, CurrentUserResponses, DeleteItemData, DeleteItemErrors, DeleteItemResponses, HealthData, HealthResponses, ListItemsData, ListItemsResponses, RegisterRegisterData, RegisterRegisterErrors, RegisterRegisterResponses, ResetForgotPasswordData, ResetForgotPasswordErrors, ResetForgotPasswordResponses, ResetResetPasswordData, ResetResetPasswordErrors, ResetResetPasswordResponses, UpdateCurrentUserData, UpdateCurrentUserErrors, UpdateCurrentUserResponses, UpdateItemData, UpdateItemErrors, UpdateItemResponses } from './types.gen';
+import { zAuthJwtLoginBody, zAuthJwtLoginResponse, zAuthJwtLogoutResponse, zCreateItemBody, zCreateItemResponse, zCurrentUserResponse, zDeleteItemPath, zDeleteItemResponse, zHealthResponse, zListItemsResponse, zRegisterRegisterBody, zRegisterRegisterResponse, zResetForgotPasswordBody, zResetResetPasswordBody, zUpdateCurrentUserBody, zUpdateCurrentUserResponse, zUpdateItemBody, zUpdateItemPath, zUpdateItemResponse } from './zod.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -20,6 +20,22 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
      */
     meta?: Record<string, unknown>;
 };
+
+/**
+ * Health
+ *
+ * Liveness/readiness probe used by Docker healthchecks and CI.
+ */
+export const health = <ThrowOnError extends boolean = false>(options?: Options<HealthData, ThrowOnError>) => (options?.client ?? client).get<HealthResponses, unknown, ThrowOnError>({
+    requestValidator: async (data) => await z.object({
+        body: z.never().optional(),
+        path: z.never().optional(),
+        query: z.never().optional()
+    }).parseAsync(data),
+    responseValidator: async (data) => await zHealthResponse.parseAsync(data),
+    url: '/health',
+    ...options
+});
 
 /**
  * Auth:Jwt.Login

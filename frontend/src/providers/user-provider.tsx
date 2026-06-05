@@ -1,5 +1,3 @@
-"use client";
-
 import type { UserRead } from "@/generated/backend-client/types.gen";
 import { createContext, useContext, useState } from "react";
 

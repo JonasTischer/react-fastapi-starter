@@ -34,7 +34,7 @@ services:
     networks:
       - my_network
     volumes:
-      - "${DB_VOLUME_NAME:-postgres_data}:/var/lib/postgresql/data"
+      - "postgres_data:/var/lib/postgresql/data"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -79,7 +79,11 @@ services:
       - my_network
 
 volumes:
+  # The real Docker volume name is parameterized so `just docker-up-db BRANCH=...`
+  # can keep per-branch data isolated; the service always references the
+  # fixed `postgres_data` key above.
   postgres_data:
+    name: ${DB_VOLUME_NAME:-postgres_data}
   frontend-node-modules:
   fastapi-venv:
 

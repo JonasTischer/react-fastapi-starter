@@ -180,7 +180,9 @@ jobs:
           uv run uvicorn src.main:app --host 0.0.0.0 --port 8000 > backend.log 2>&1 &
           BACKEND_PID=$!
 
-          npx --yes wait-on -t 90000 http://127.0.0.1:8000/health
+          # http-get:// makes wait-on use GET; plain http:// uses HEAD, which
+          # FastAPI's @app.get("/health") rejects with 405.
+          npx --yes wait-on -t 90000 http-get://127.0.0.1:8000/health
           if [ $? -ne 0 ]; then
             echo "::error::Backend did not become ready within 90s"
             echo "----- backend.log -----"

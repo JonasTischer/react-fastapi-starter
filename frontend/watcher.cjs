@@ -6,7 +6,9 @@ const { config } = require("dotenv");
 
 config({ path: ".env.local" });
 
-const openapiFile = process.env.OPENAPI_OUTPUT_FILE;
+// Default to openapi.json so a fresh checkout without .env.local still works.
+const openapiFile = process.env.OPENAPI_OUTPUT_FILE || "openapi.json";
+console.log(`Watching ${openapiFile} for changes to regenerate the client...`);
 // Watch the specific file for changes
 chokidar.watch(openapiFile).on("change", (path) => {
   console.log(`File ${path} has been modified. Running generate-client...`);

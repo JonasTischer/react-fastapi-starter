@@ -64,6 +64,9 @@ services:
       # host-exposed backend, not the compose service name.
       VITE_API_BASE_URL: http://localhost:8000
       PORT: "5173"
+      # Path the openapi watcher tracks (the backend writes the schema here via
+      # the /frontend mount); avoids depending on a mounted .env.local.
+      OPENAPI_OUTPUT_FILE: openapi.json
     volumes:
       - ./frontend:/app
       - frontend-node-modules:/app/node_modules

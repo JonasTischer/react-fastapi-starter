@@ -169,23 +169,29 @@ jobs:
         working-directory: ./backend
         run: uv run alembic upgrade head
 
-      - name: Start backend server
+      # Backend, readiness wait, and Playwright all run in ONE step so the
+      # backgrounded server reliably survives for the whole run. wait-on has a
+      # finite timeout (it defaults to infinite), and the backend log is dumped
+      # on failure so a startup error never turns into a multi-hour hang.
+      - name: Run E2E tests (backend + Playwright)
         working-directory: ./backend
         run: |
-          uv run uvicorn src.main:app --host 0.0.0.0 --port 8000 &
-          echo $! > ../backend.pid
+          set +e  # capture statuses and dump logs instead of failing fast
+          uv run uvicorn src.main:app --host 0.0.0.0 --port 8000 > backend.log 2>&1 &
+          BACKEND_PID=$!
 
-      - name: Wait for backend to be ready
-        run: pnpm dlx wait-on http://127.0.0.1:8000/health
-
-      - name: Run Playwright tests
-        working-directory: ./frontend
-        run: pnpm run test:e2e
-
-      - name: Stop backend server
-        if: always()
-        run: |
-          if [ -f backend.pid ]; then
-            kill $(cat backend.pid) || true
-            rm backend.pid
+          npx --yes wait-on -t 90000 http://127.0.0.1:8000/health
+          if [ $? -ne 0 ]; then
+            echo "::error::Backend did not become ready within 90s"
+            echo "----- backend.log -----"
+            cat backend.log
+            kill "$BACKEND_PID" 2>/dev/null
+            exit 1
           fi
+
+          cd ../frontend
+          pnpm run test:e2e
+          status=$?
+
+          kill "$BACKEND_PID" 2>/dev/null
+          exit $status

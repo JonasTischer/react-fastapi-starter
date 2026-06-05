@@ -60,7 +60,9 @@ test.describe("Login page", () => {
     page,
   }) => {
     await page.goto("/dashboard");
-    await page.waitForURL("**/login");
+    // The guard redirects to /login?redirect=%2Fdashboard, so match on the path
+    // with a regex (a "**/login" glob would not match the query string).
+    await page.waitForURL(/\/login/);
     await expect(
       page.getByRole("heading", { name: LOGIN_HEADING }),
     ).toBeVisible();

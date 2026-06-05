@@ -4,8 +4,11 @@ import { Suspense, lazy } from "react";
 import { NotFound } from "@/components/not-found";
 
 // Router devtools are dev-only — in production this resolves to a no-op so the
-// devtools bundle is never shipped to users.
-const TanStackRouterDevtools = import.meta.env.PROD
+// devtools bundle is never shipped to users. They're also disabled under e2e
+// (VITE_DISABLE_DEVTOOLS=true) so the devtools panel can't shadow page content.
+const devtoolsDisabled =
+	import.meta.env.PROD || import.meta.env.VITE_DISABLE_DEVTOOLS === "true";
+const TanStackRouterDevtools = devtoolsDisabled
 	? () => null
 	: lazy(() =>
 			import("@tanstack/react-router-devtools").then((m) => ({

@@ -26,8 +26,7 @@
     "vite.config.ts",
     "vitest.setup.ts",
     "openapi-ts.config.ts",
-    "playwright.config.ts",
-    "watcher.js"
+    "playwright.config.ts"
   ],
   "exclude": ["node_modules", "dist"]
 }

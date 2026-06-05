@@ -5,6 +5,8 @@ interface ImportMetaEnv {
 	readonly VITE_API_BASE_URL?: string;
 	/** "true" to show the Google OAuth button (backend GOOGLE_OAUTH_ENABLED=True) */
 	readonly VITE_GOOGLE_OAUTH_ENABLED?: string;
+	/** "true" to disable the TanStack Router devtools (used during e2e runs) */
+	readonly VITE_DISABLE_DEVTOOLS?: string;
 }
 
 interface ImportMeta {

@@ -35,7 +35,7 @@ export function useLogout() {
 		onSuccess: () => {
 			// No need to manually clear token - backend clears HTTPOnly cookie automatically
 			queryClient.clear(); // Clear all cached data
-			navigate({ to: "/" });
+			navigate({ to: "/login" });
 		},
 	});
 }

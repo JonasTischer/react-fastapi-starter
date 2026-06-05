@@ -4,7 +4,7 @@ set -euo pipefail
 
 pnpm run dev &
 DEV_PID=$!
-node watcher.js &
+node watcher.cjs &
 WATCHER_PID=$!
 
 terminate_tree() {

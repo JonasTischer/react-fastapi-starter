@@ -31,6 +31,8 @@ export default defineConfig({
       // VITE_API_BASE_URL is what the browser app reads via import.meta.env.
       API_BASE_URL: apiBaseUrl,
       VITE_API_BASE_URL: apiBaseUrl,
+      // Keep the dev-only devtools panel out of the e2e DOM.
+      VITE_DISABLE_DEVTOOLS: "true",
     },
   },
   projects: [

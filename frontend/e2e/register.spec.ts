@@ -33,15 +33,18 @@ test.describe("Registration page", () => {
     await page.getByLabel("I agree to the Terms of Service and the Data Privacy Policy of React FastAPI.").check();
     await page.getByRole("button", { name: "Create Account" }).click();
 
-    // Wait for either navigation to dashboard (auto-login) or redirect to login
+    // Registration auto-logs in and lands on the dashboard; fall back to the
+    // login page if auto-login is disabled.
     try {
-      // Try auto-login to dashboard
-      await page.waitForURL("**/dashboard", { timeout: 10000 });
-      await expect(page.getByText("Dashboard")).toBeVisible();
+      await page.waitForURL(/\/dashboard/, { timeout: 15000 });
+      await expect(
+        page.getByRole("heading", { name: "Dashboard" }),
+      ).toBeVisible();
     } catch {
-      // Fall back to manual redirect to login
-      await page.waitForURL("**/login", { timeout: 5000 });
-      await expect(page.getByRole("heading", { name: "Welcome back!" })).toBeVisible();
+      await page.waitForURL(/\/login/, { timeout: 5000 });
+      await expect(
+        page.getByRole("heading", { name: "Welcome back!" }),
+      ).toBeVisible();
     }
   });
 

@@ -6,27 +6,27 @@ authors = [{ name = "Jonas Tischer", email = "jonas.tischer@gmail.com" }]
 requires-python = ">=3.12"
 readme = "README.md"
 dependencies = [
-    "fastapi[standard]>=0.135.3",
+    "fastapi[standard]>=0.136.3",
     "asyncpg>=0.30.0",
-    "fastapi-users[sqlalchemy,oauth]>=14.0.1",
-    "pydantic-settings>=2.11",
-    "fastapi-mail>=1.4.1",
-    "fastapi-pagination>=0.14.1",
+    "fastapi-users[sqlalchemy,oauth]>=15.0.5",
+    "pydantic-settings>=2.14.1",
+    "fastapi-mail>=1.6.4",
+    "fastapi-pagination>=0.15.14",
     "alembic>=1.14.0",
     "slowapi>=0.1.9",
-    "sentry-sdk[fastapi]>=2.0.0",
+    "sentry-sdk[fastapi]>=2.61.1",
 ]
 
 [dependency-groups]
 dev = [
     "pre-commit>=3.8.0",
-    "ruff>=0.1.15",
-    "ty>=0.0.1a14",
+    "ruff>=0.15.16",
+    "ty>=0.0.44",
     "watchdog>=5.0.3",
     "python-dotenv>=1.0.1",
     "pytest>=8.3.4",
     "pytest-mock>=3.14.0",
-    "pytest-asyncio>=0.24.0",
+    "pytest-asyncio>=1.4.0",
     "pytest-cov>=5.0.0",
 ]
 
